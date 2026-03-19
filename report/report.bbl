@@ -1,0 +1,25 @@
+\begin{thebibliography}{1}
+
+\bibitem{fewshot}
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared~D Kaplan, Prafulla
+  Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell,
+  et~al.
+\newblock Language models are few-shot learners.
+\newblock {\em Advances in neural information processing systems},
+  33:1877--1901, 2020.
+
+\bibitem{lora}
+Edward~J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+  Wang, Liang Wang, Weizhu Chen, et~al.
+\newblock Lora: Low-rank adaptation of large language models.
+\newblock {\em Iclr}, 1(2):3, 2022.
+
+\bibitem{rag}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, Tim
+  Rockt{\"a}schel, et~al.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
+\newblock {\em Advances in neural information processing systems},
+  33:9459--9474, 2020.
+
+\end{thebibliography}

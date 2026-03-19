@@ -1,3 +1,3 @@
-# Natural language processing course: `Put name of your project here`
+# Natural language processing course: `Investment and Tax Law Chatbot`
 
-Please, organize README and the whole structure of the repository to be self-contained and reproducible.
+A domain-specific LLM chatbot for answering questions about Slovenian tax and investing law.
