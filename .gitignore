@@ -127,3 +127,18 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+report/**/*.aux
+report/**/*.bbl
+report/**/*.blg
+report/**/*.fdb_latexmk
+report/**/*.fls
+report/**/*.out
+report/**/*.synctex.gz
+report/**/*.log
+report/**/*.toc
+report/**/*.lof
+report/**/*.lot
+report/**/*.nav
+report/**/*.snm
+report/**/*.vrb
