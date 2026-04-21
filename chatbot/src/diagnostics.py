@@ -1,9 +1,7 @@
 import sys
-
+import os
 
 def run_import_diagnostics():
-    print("=== Running diagnostics ===")
-
     try:
         import torch
         print("[OK] PyTorch imported")
@@ -39,4 +37,29 @@ def run_import_diagnostics():
     except Exception as e:
         print(f"[ERROR] transformers test failed: {e}")
 
-    print("=== Diagnostics complete ===\n")
+def run_file_system_diagnostics():
+    paths = ["/workspace", "/models"]
+
+    for path in paths:
+        print(f"\nContents of {path}:")
+
+        if not os.path.exists(path):
+            print("  [Path does not exist]")
+            continue
+
+        try:
+            entries = os.listdir(path)
+
+            if not entries:
+                print("  [Empty directory]")
+                continue
+
+            for name in entries:
+                full_path = os.path.join(path, name)
+                if os.path.isdir(full_path):
+                    print(f"  [DIR]  {name}")
+                else:
+                    print(f"  [FILE] {name}")
+
+        except Exception as e:
+            print(f"  [Error accessing directory: {e}]")

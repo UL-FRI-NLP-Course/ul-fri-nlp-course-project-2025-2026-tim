@@ -1,1 +1,7 @@
 transformers==4.36.2
+torch
+sentence-transformers
+scikit-learn
+pyyaml
+huggingface_hub
+accelerate
