@@ -5,3 +5,9 @@ scikit-learn
 pyyaml
 huggingface_hub
 accelerate
+vllm
+
+# server
+fastapi
+uvicorn
+requests

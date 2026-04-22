@@ -13,12 +13,12 @@ srun \
     --time=00:30:00 \
     --pty \
     singularity exec --nv \
-        --overlay $OVERLAY_FILE \
+        --overlay $OVERLAY_FILE:ro \
         -B $(pwd):/workspace \
         -B ${LLM_MODELS_DIR}:/models \
         $SIF_FILE \
         bash -c "
             echo 'Running on: ' \$(hostname)
             source /opt/venv/bin/activate
-            python /workspace/run.py
+            python /workspace/src/run_llm_server.py
         "

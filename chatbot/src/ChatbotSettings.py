@@ -6,6 +6,7 @@ import yaml
 class ChatbotSettings:
     model_dir_path: str = '/models'
     chatbot_dir_path: str = '/workspace'
+    server_boot_file_name: str = 'server_boot_config.yaml'
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     LLM_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     top_k_chunks: int = 50
@@ -24,6 +25,7 @@ class ChatbotSettings:
             "ChatbotSettings:\n"
             f"  model_dir_path: {self.model_dir_path}\n"
             f"  chatbot_dir_path: {self.chatbot_dir_path}\n"
+            f"  server_boot_file_name: {self.server_boot_file_name}\n"
             f"  embedding_model: {self.embedding_model}\n"
             f"  LLM_model: {self.LLM_model}\n"
             f"  top_k_chunks: {self.top_k_chunks}\n"

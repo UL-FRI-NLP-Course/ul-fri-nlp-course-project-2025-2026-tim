@@ -1,5 +1,6 @@
 model_dir_path: /models
 chatbot_dir_path: /workspace
+server_boot_file_name: server_boot_config.yaml
 
 embedding_model: sentence-transformers/all-MiniLM-L6-v2
 LLM_model: "cjvt/GaMS-1B"
