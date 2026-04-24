@@ -60,9 +60,9 @@ class LawInvestmentChatbot:
 
         messages = []
         messages.append({"role": "system", "content": self.system_prompt})
-        messages.append({"role": "system", "content": rag_context})
         for role, content in self.chat_history:
             messages.append({"role": role, "content": content})
+        messages.append({"role": "system", "content": rag_context})
         messages.append({"role": "user", "content": user_text_raw})
 
         try:

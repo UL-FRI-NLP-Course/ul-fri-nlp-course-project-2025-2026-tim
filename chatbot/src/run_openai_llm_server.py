@@ -20,7 +20,7 @@ def get_free_port():
         return s.getsockname()[1]
 
 
-CONFIG_FILE_PATH = "/workspace/config.yaml"
+CONFIG_FILE_PATH = "/workspace/configs/config.yaml"
 SETTINGS = load_settings(CONFIG_FILE_PATH)
 
 MODEL_REPO = SETTINGS.LLM_model
@@ -115,7 +115,9 @@ if __name__ == "__main__":
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }
 
-    config_file = Path("/workspace/server_boot_config.yaml")
+    CHATBOT_ROOT = Path(SETTINGS.chatbot_dir_path)
+    BOOT_CONFIG_NAME = SETTINGS.server_boot_file_name
+    config_file = (CHATBOT_ROOT / BOOT_CONFIG_NAME).resolve()
     config_file.parent.mkdir(parents=True, exist_ok=True)
 
     if config_file.exists():

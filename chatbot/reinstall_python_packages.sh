@@ -42,7 +42,7 @@ singularity exec \
         pip install --no-cache-dir --upgrade pip
 
         echo 'Installing updated requirements...'
-        pip install --no-cache-dir -r /workspace/requirements.txt
+        pip install --no-cache-dir -r /workspace/configs/requirements.txt
     "
 
 echo "Overlay successfully rebuilt and packages updated:"

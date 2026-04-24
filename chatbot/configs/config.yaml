@@ -1,7 +1,7 @@
 model_dir_path: /models
 chatbot_dir_path: /workspace
-server_boot_file_name: server_boot_config.yaml
-system_prompt_file_name: system_prompt.yaml
+server_boot_file_name: configs/server_boot_config.yaml
+system_prompt_file_name: configs/system_prompt.yaml
 
 embedding_model: sentence-transformers/all-MiniLM-L6-v2
 LLM_model: meta-llama/Llama-3.1-8B-Instruct

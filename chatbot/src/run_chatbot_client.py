@@ -1,7 +1,7 @@
 from LawInvestmentChatbot import LawInvestmentChatbot
 from ChatbotSettings import load_settings
 
-CONFIG_FILE_PATH = "/workspace/config.yaml"
+CONFIG_FILE_PATH = "/workspace/configs/config.yaml"
 
 if __name__ == '__main__':
     print("NLP Course Run Chatbot Job Startup")

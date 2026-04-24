@@ -39,7 +39,7 @@ singularity exec \
         source \$VENV_PATH/bin/activate
 
         pip install --no-cache-dir --upgrade pip
-        pip install --no-cache-dir -r /workspace/requirements.txt
+        pip install --no-cache-dir -r /workspace/configs/requirements.txt
     "
 
 echo "Container and overlay ready:"
