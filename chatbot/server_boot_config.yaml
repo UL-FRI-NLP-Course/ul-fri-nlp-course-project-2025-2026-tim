@@ -1,4 +1,6 @@
-hostname: wn205.arnes.si
-port: 8000
-timestamp: '2026-04-22T14:12:10.544427Z'
-url: http://wn205.arnes.si:8000
+api_prefix: /NLP_TIM
+base_url: http://wn203.arnes.si:49301
+full_url: http://wn203.arnes.si:49301/NLP_TIM
+hostname: wn203.arnes.si
+port: 49301
+timestamp: '2026-04-24T11:05:03.774036Z'

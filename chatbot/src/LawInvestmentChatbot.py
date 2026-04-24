@@ -19,7 +19,7 @@ class LawInvestmentChatbot:
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)
         try:
-            base_url = config["url"]
+            base_url = config["full_url"]
         except KeyError:
             raise ValueError("Invalid server config: missing 'url'")
 
@@ -76,7 +76,6 @@ class LawInvestmentChatbot:
 
         full_response = full_response.split("Assistant:")[-1].strip()
         self.chat_history.append(("Assistant", full_response))
-
 
 
 

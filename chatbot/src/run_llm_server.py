@@ -1,5 +1,5 @@
 import socket
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, APIRouter
 from fastapi.responses import StreamingResponse
 import uvicorn
 import sys
@@ -10,13 +10,22 @@ import yaml
 from LLMHandler import LLMHandler
 from ChatbotSettings import load_settings
 
-app = FastAPI()
-handler = None
+def get_free_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("", 0))
+        return s.getsockname()[1]
 
 CONFIG_FILE_PATH = "/workspace/config.yaml"
 SETTINGS = load_settings(CONFIG_FILE_PATH)
 MODEL_PATH = f"{SETTINGS.model_dir_path}/{SETTINGS.LLM_model}"
-PORT = 8000
+
+PORT = get_free_port()
+API_PREFIX = "/NLP_TIM"
+
+app = FastAPI()
+router = APIRouter(prefix=API_PREFIX)
+
+handler = None
 
 @app.on_event("startup")
 async def startup_event():
@@ -28,11 +37,13 @@ async def startup_event():
     handler.load_model(MODEL_PATH)
 
     hostname = socket.gethostname()
-    url = f"http://{hostname}:{PORT}"
+    base_url = f"http://{hostname}:{PORT}"
+    full_url = f"{base_url}{API_PREFIX}"
 
     print(f"LLM Server running on: {hostname}")
-    print(url)
-
+    print(f"Base URL: {base_url}")
+    print(f"API Prefix: {API_PREFIX}")
+    print(f"Full API URL: {full_url}")
 
     config_dir = Path(SETTINGS.chatbot_dir_path).resolve()
     config_dir.mkdir(parents=True, exist_ok=True)
@@ -43,10 +54,11 @@ async def startup_event():
 
     config_data = {
         "hostname": hostname,
-        "url": url,
+        "base_url": base_url,
+        "api_prefix": API_PREFIX,
+        "full_url": full_url,
         "port": PORT,
         "timestamp": datetime.utcnow().isoformat() + "Z"
-        
     }
 
     with open(config_file, "w") as f:
@@ -55,12 +67,17 @@ async def startup_event():
     print(f"Server config written to: {config_file}")
 
 
-@app.get("/")
+
+
+
+@router.get("/")
 def health():
     return {"status": "ok"}
 
 
-@app.post("/generate_stream")
+
+
+@router.post("/generate_stream")
 async def generate_stream(request: Request):
     global handler
 
@@ -83,15 +100,22 @@ async def generate_stream(request: Request):
     return StreamingResponse(token_stream(), media_type="text/plain")
 
 
-@app.post("/shutdown")
+
+
+@router.post("/shutdown")
 async def shutdown():
     sys.exit(0)
 
 
+
+
+
+app.include_router(router)
+
 if __name__ == "__main__":
     uvicorn.run(
-        "run_llm_server:app",
+        app,
         host="0.0.0.0",
-        port=8000,
+        port=PORT,
         reload=False
     )
