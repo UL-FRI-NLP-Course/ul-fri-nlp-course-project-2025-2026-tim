@@ -3,30 +3,39 @@ from pathlib import Path
 import yaml
 import json
 
+from RAGHandler import RAGHandler
 
 class LawInvestmentChatbot:
     def __init__(self, settings):
         self.running = False
         self.settings = settings
         self.chat_history = []
+        self.RAG = RAGHandler(settings)
 
-        config_path = Path(settings.chatbot_dir_path) / settings.server_boot_file_name
+        # LLM SERVER COMMUNICATION
+        config_path = Path(settings.chatbot_dir_path) / settings.server_boot_file_name        
         if not config_path.exists():
-            raise FileNotFoundError(
-                f"Server boot config not found: {config_path}"
-            )
-
+            raise FileNotFoundError(f"Server boot config not found: {config_path}")
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)
-
         try:
             base_url = config["base_url"]
             model = config["model_path"]
         except KeyError:
             raise ValueError("Invalid server config")
-
-        self.server_url = f"{base_url}/v1/completions"
+        self.server_url = f"{base_url}/v1/chat/completions"
         self.llm_model = model
+        
+        # SYSTEM PROMPT INITIALIZATION
+        system_prompt_path = Path(settings.chatbot_dir_path) / settings.system_prompt_file_name
+        if not system_prompt_path.exists():
+            raise FileNotFoundError(f"Initial system prompt not found: {system_prompt_path}")
+        with open(system_prompt_path, "r") as f:
+            system_prompt = yaml.safe_load(f)
+        try:
+            self.system_prompt = system_prompt['text'].strip()
+        except KeyError:
+            raise ValueError("Invalid system prompt")
 
 
     def _handle_command(self, command: str):
@@ -42,33 +51,32 @@ class LawInvestmentChatbot:
             print(f"Unknown command: {command}. Type /help for available commands.")
 
 
-    def _build_prompt(self, text):
-        prompt = ""
-        for role, content in self.chat_history:
-            if role == "user":
-                prompt += f"User: {content}\n"
-            else:
-                prompt += f"Assistant: {content}\n"
 
-        prompt += f"User: {text}\nAssistant:"
-        return prompt
-
-
-    def _handle_question(self, text: str):
+    def _handle_question(self, user_text_raw: str):
         print("Assistant:", end=" ", flush=True)
         full_response = ""
 
-        prompt = self._build_prompt(text)
+        rag_context = self.RAG.build_RAG_prompt(user_text_raw, self.chat_history)
+
+        messages = []
+        messages.append({"role": "system", "content": self.system_prompt})
+        messages.append({"role": "system", "content": rag_context})
+        for role, content in self.chat_history:
+            messages.append({"role": role, "content": content})
+        messages.append({"role": "user", "content": user_text_raw})
 
         try:
             response = requests.post(
                 self.server_url,
                 json={
                     "model": self.llm_model,
-                    "prompt": prompt,
-                    "stream": True,
+                    "messages": messages,
                     "temperature": self.settings.llm_temperature,
+                    "top_p": self.settings.llm_top_p,
                     "max_tokens": self.settings.llm_max_new_tokens,
+                    "presence_penalty": self.settings.llm_presence_penalty,
+                    "frequency_penalty": self.settings.llm_frequency_penalty,
+                    "stream": True
                 },
                 stream=True,
                 timeout=300
@@ -88,12 +96,17 @@ class LawInvestmentChatbot:
 
                     try:
                         chunk = json.loads(data)
-                        token = chunk["choices"][0]["text"]
 
-                        print(token, end="", flush=True)
-                        full_response += token
+                        delta = chunk["choices"][0]["delta"]
+                        token = delta.get("content", "")
 
-                    except Exception:
+                        if token:
+                            print(token, end="", flush=True)
+                            full_response += token
+
+                    except Exception as e:
+                        print(f"\n[DEBUG] Failed to parse chunk: {data}")
+                        print(f"[DEBUG] Error: {e}")
                         continue
 
         except requests.exceptions.RequestException as e:
@@ -102,12 +115,12 @@ class LawInvestmentChatbot:
 
         print()
 
-        # Update history AFTER generation (prevents duplication)
-        self.chat_history.append(("user", text))
+        self.chat_history.append(("user", user_text_raw))
         if full_response.strip():
             self.chat_history.append(("assistant", full_response.strip()))
-
-
+        
+        
+        
     def _handle_chatbot_exit(self):
         print("Exiting chatbot...")
 

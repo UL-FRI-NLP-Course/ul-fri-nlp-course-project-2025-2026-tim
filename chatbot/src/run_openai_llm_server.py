@@ -10,6 +10,7 @@ import filelock
 
 import subprocess
 import sys
+import os
 from ChatbotSettings import load_settings
 
 
@@ -42,6 +43,8 @@ def download_if_missing(model_path: Path):
     if config_file.exists():
         return
 
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+
     lock_path = str(model_path) + ".lock"
 
     with filelock.FileLock(lock_path):
@@ -49,6 +52,7 @@ def download_if_missing(model_path: Path):
             return
 
         print(f"[INFO] Downloading model to {model_path}")
+        MODEL_ROOT.mkdir(parents=True, exist_ok=True)
 
         with tempfile.TemporaryDirectory(dir=MODEL_ROOT) as tmp_dir:
             tmp_path = Path(tmp_dir)
@@ -56,7 +60,8 @@ def download_if_missing(model_path: Path):
             snapshot_download(
                 repo_id=MODEL_REPO,
                 local_dir=tmp_path,
-                local_dir_use_symlinks=False
+                local_dir_use_symlinks=False,
+                token=os.environ.get("HUGGINGFACE_HUB_TOKEN")
             )
 
             if not (tmp_path / "config.json").exists():
@@ -64,14 +69,17 @@ def download_if_missing(model_path: Path):
 
             if model_path.exists():
                 shutil.rmtree(model_path)
+
             shutil.move(str(tmp_path), str(model_path))
+
         print("[INFO] Model download complete")
-
-
+        
+        
 def start_vllm_server(model_path, host, port):
     cmd = [
         sys.executable, "-m", "vllm.entrypoints.openai.api_server",
         "--model", str(model_path),
+        "--max-model-len", "16384",
         "--host", host,
         "--port", str(port),
         "--tensor-parallel-size", "1",

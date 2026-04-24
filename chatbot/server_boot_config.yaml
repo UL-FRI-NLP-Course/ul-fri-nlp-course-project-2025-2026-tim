@@ -1,5 +1,5 @@
-base_url: http://wn219.arnes.si:57403
-hostname: wn219.arnes.si
-model_path: /models/cjvt/GaMS-1B
-port: 57403
-timestamp: '2026-04-24T11:36:39.677402Z'
+base_url: http://wn202.arnes.si:37027
+hostname: wn202.arnes.si
+model_path: /models/meta-llama/Llama-3.1-8B-Instruct
+port: 37027
+timestamp: '2026-04-24T14:51:08.649155Z'
