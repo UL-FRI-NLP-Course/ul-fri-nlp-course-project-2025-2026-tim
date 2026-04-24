@@ -20,5 +20,5 @@ srun \
         bash -c "
             echo 'Running on: ' \$(hostname)
             source /opt/venv/bin/activate
-            python /workspace/src/run_llm_server.py
+            python /workspace/src/run_openai_llm_server.py
         "

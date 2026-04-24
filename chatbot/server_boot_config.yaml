@@ -1,6 +1,5 @@
-api_prefix: /NLP_TIM
-base_url: http://wn203.arnes.si:49301
-full_url: http://wn203.arnes.si:49301/NLP_TIM
-hostname: wn203.arnes.si
-port: 49301
-timestamp: '2026-04-24T11:05:03.774036Z'
+base_url: http://wn219.arnes.si:57403
+hostname: wn219.arnes.si
+model_path: /models/cjvt/GaMS-1B
+port: 57403
+timestamp: '2026-04-24T11:36:39.677402Z'

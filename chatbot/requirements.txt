@@ -6,8 +6,7 @@ pyyaml
 huggingface_hub
 accelerate
 vllm
-
-# server
+openai
 fastapi
 uvicorn
 requests

@@ -6,7 +6,7 @@ OVERLAY_FILE=./containers/chatbot_overlay.img
 srun \
     --nodes=1 \
     --ntasks=1 \
-    --cpus-per-task=1 \
+    --cpus-per-task=4 \
     --partition=gpu \
     --time=00:10:00 \
     --pty \
