@@ -1,0 +1,23 @@
+model_dir_path: /models
+chatbot_dir_path: /workspace
+server_boot_file_name: configs/server_boot_config.yaml
+system_prompt_file_name: configs/system_prompt.yaml
+
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+LLM_model: meta-llama/Llama-3.1-8B-Instruct
+
+top_k_chunks: 50
+reorder_top_n_chunks: 10
+
+llm_temperature: 0.3
+llm_top_p: 0.85
+llm_top_k_sampling: 40
+llm_do_sample: true
+llm_repetition_penalty: 1.2
+llm_presence_penalty: 0.2
+llm_frequency_penalty: 0.2
+llm_min_p: 0.05
+llm_ignore_eos: true
+llm_max_new_tokens: 256
+
+nn_device: cuda

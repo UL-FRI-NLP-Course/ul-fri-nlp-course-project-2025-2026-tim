@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER=docker://pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
+CONTAINER=docker://pytorch/pytorch:2.1.0-cuda11.8-cudnn8-devel
 SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
 OVERLAY_SIZE_GB=16
@@ -39,7 +39,7 @@ singularity exec \
         source \$VENV_PATH/bin/activate
 
         pip install --no-cache-dir --upgrade pip
-        pip install --no-cache-dir -r /workspace/requirements.txt
+        pip install --no-cache-dir -r /workspace/configs/requirements.txt
     "
 
 echo "Container and overlay ready:"

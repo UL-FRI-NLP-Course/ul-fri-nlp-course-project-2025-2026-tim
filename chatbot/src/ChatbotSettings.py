@@ -6,6 +6,8 @@ import yaml
 class ChatbotSettings:
     model_dir_path: str = '/models'
     chatbot_dir_path: str = '/workspace'
+    server_boot_file_name: str = 'server_boot_config.yaml'
+    system_prompt_file_name: str = 'system_prompt.yaml'
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     LLM_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     top_k_chunks: int = 50
@@ -18,12 +20,19 @@ class ChatbotSettings:
     llm_repetition_penalty: float = 1.1
     llm_do_sample: bool = True
     llm_max_new_tokens: int = 256
+    llm_presence_penalty: float = 0.3
+    llm_frequency_penalty: float = 0.3
+    llm_min_p: float = 0.05
+    llm_ignore_eos: bool = True
+    
 
     def __str__(self):
         return (
             "ChatbotSettings:\n"
             f"  model_dir_path: {self.model_dir_path}\n"
             f"  chatbot_dir_path: {self.chatbot_dir_path}\n"
+            f"  server_boot_file_name: {self.server_boot_file_name}\n"
+            f"  system_prompt_file_name: {self.system_prompt_file_name}\n"
             f"  embedding_model: {self.embedding_model}\n"
             f"  LLM_model: {self.LLM_model}\n"
             f"  top_k_chunks: {self.top_k_chunks}\n"
@@ -34,6 +43,10 @@ class ChatbotSettings:
             f"  llm_top_k_sampling: {self.llm_top_k_sampling}\n"
             f"  llm_repetition_penalty: {self.llm_repetition_penalty}\n"
             f"  llm_do_sample: {self.llm_do_sample}\n"
+            f"  llm_presence_penalty: {self.llm_presence_penalty}\n"
+            f"  llm_frequency_penalty: {self.llm_frequency_penalty}\n"
+            f"  llm_min_p: {self.llm_min_p}\n"
+            f"  llm_ignore_eos: {self.llm_ignore_eos}\n"
             f"  llm_max_new_tokens: {self.llm_max_new_tokens}"
         )
 

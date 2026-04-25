@@ -1,6 +1,5 @@
 #!/bin/bash
 
-CONTAINER=docker://pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
 SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
 OVERLAY_SIZE_GB=16
@@ -43,7 +42,7 @@ singularity exec \
         pip install --no-cache-dir --upgrade pip
 
         echo 'Installing updated requirements...'
-        pip install --no-cache-dir -r /workspace/requirements.txt
+        pip install --no-cache-dir -r /workspace/configs/requirements.txt
     "
 
 echo "Overlay successfully rebuilt and packages updated:"
