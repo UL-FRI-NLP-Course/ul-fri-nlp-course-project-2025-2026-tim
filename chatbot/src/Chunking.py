@@ -53,6 +53,9 @@ from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 ARTICLE_LINE_RE = re.compile(r"(?m)^\s*(\d+)\.\s*člen\s*$")
 ARTICLE_INLINE_RE = re.compile(r"(?m)^\s*(\d+)\.\s*člen\b")
 PARAGRAPH_RE = re.compile(r"(?m)^\s*\((\d+)\)\s+")
+LEGAL_NUMBERED_LIST_ITEM_RE = re.compile(r"(?m)^\s*(\d+[.)])\s+")
+LEGAL_LETTERED_LIST_ITEM_RE = re.compile(r"(?m)^\s*([a-zčšž]\))\s+")
+LEGAL_LIST_ITEM_RE = re.compile(r"(?m)^\s*((?:\d+[.)]|[a-zčšž]\)))\s+")
 LAW_CODE_RE = re.compile(r"\(([^()]{2,30})\)\s*$")
 
 # Typical chapter / part headings in Slovenian laws:
@@ -71,6 +74,7 @@ WORD_CHAPTER_RE = re.compile(
     r"(?m)^\s*(PRVI|DRUGI|TRETJI|ČETRTI|PETI|ŠESTI|SEDMI|OSMI|DEVETI|DESETI|ENAJSTI|DVANAJSTI)\s+DEL\b.*$",
     re.IGNORECASE,
 )
+NUMBERED_HEADING_RE = re.compile(r"^\s*\d+\.\s+[A-ZČŠŽ][^.;:]{1,120}$")
 
 NOISE_PREFIXES = [
     "Opozorilo:",
@@ -253,7 +257,7 @@ def write_jsonl(path: Path, rows: Iterable[dict]) -> None:
 
 def normalize_whitespace(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
-    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"[\u00a0 \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
 
@@ -333,6 +337,16 @@ def detect_chapter_positions(text: str) -> List[Tuple[int, str]]:
     return deduped
 
 
+def is_structural_heading(line: str) -> bool:
+    line = line.strip()
+    if not line:
+        return False
+    return any(
+        rx.fullmatch(line)
+        for rx in (ROMAN_CHAPTER_RE, ARABIC_CHAPTER_RE, WORD_CHAPTER_RE, NUMBERED_HEADING_RE)
+    )
+
+
 def assign_chapter(article_start: int, chapter_positions: List[Tuple[int, str]]) -> Optional[str]:
     current = None
     for pos, chapter in chapter_positions:
@@ -374,7 +388,11 @@ def parse_articles(text: str) -> List[dict]:
             article_heading = lines[1][1:-1].strip()
             body_start_idx = 2
 
-        article_body = normalize_whitespace("\n".join(lines[body_start_idx:]))
+        body_lines = [
+            line for line in lines[body_start_idx:]
+            if not is_structural_heading(line)
+        ]
+        article_body = normalize_whitespace("\n".join(body_lines))
 
         articles.append(
             {
@@ -403,6 +421,26 @@ def split_paragraphs(article_body: str) -> List[Tuple[Optional[str], str]]:
     return parts
 
 
+def split_legal_list_items(text: str) -> List[Tuple[Optional[str], str]]:
+    matches = list(LEGAL_NUMBERED_LIST_ITEM_RE.finditer(text))
+    if not matches:
+        matches = list(LEGAL_LETTERED_LIST_ITEM_RE.finditer(text))
+    if not matches:
+        return [(None, text.strip())]
+
+    prefix = text[:matches[0].start()].strip()
+    parts: List[Tuple[Optional[str], str]] = []
+    for i, match in enumerate(matches):
+        start = match.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        label = match.group(1)
+        block = normalize_whitespace(text[start:end])
+        if prefix and i == 0:
+            block = normalize_whitespace(f"{prefix}\n{block}")
+        parts.append((label, block))
+    return parts
+
+
 def split_long_text(text: str, max_chars: int = 1200, overlap: int = 150) -> List[str]:
     """
     Fallback splitter if a paragraph is still very long.
@@ -412,7 +450,10 @@ def split_long_text(text: str, max_chars: int = 1200, overlap: int = 150) -> Lis
     if len(text) <= max_chars:
         return [text]
 
-    candidate_breaks = [m.end() for m in re.finditer(r"[.;:]\s+", text)]
+    candidate_breaks = [
+        m.end()
+        for m in re.finditer(r"[;:]\s+|(?<!\d)\.\s+|\n+", text)
+    ]
     chunks: List[str] = []
     start = 0
 
@@ -425,6 +466,11 @@ def split_long_text(text: str, max_chars: int = 1200, overlap: int = 150) -> Lis
                 best_end = b
 
         end = best_end if best_end else target_end
+        if best_end is None and end < len(text):
+            whitespace = text.rfind(" ", start + max_chars // 2, target_end)
+            if whitespace > start:
+                end = whitespace
+
         chunk = text[start:end].strip()
         if chunk:
             chunks.append(chunk)
@@ -432,7 +478,7 @@ def split_long_text(text: str, max_chars: int = 1200, overlap: int = 150) -> Lis
         if end >= len(text):
             break
 
-        start = max(end - overlap, start + 1)
+        start = max(end, start + 1)
 
     return chunks
 
@@ -483,7 +529,10 @@ def make_formatted_text(
     if article_heading:
         parts.append(f"Naslov člena: {article_heading}")
     if paragraph_number:
-        parts.append(f"Odstavek: ({paragraph_number})")
+        if paragraph_number.endswith((")", ".")):
+            parts.append(f"Odstavek/točka: {paragraph_number}")
+        else:
+            parts.append(f"Odstavek: ({paragraph_number})")
 
     parts.append(f"Besedilo: {text}")
     return " | ".join(parts)
@@ -561,6 +610,8 @@ def parse_record_to_chunks(
         article_heading = article["article_heading"]
 
         paragraph_units = split_paragraphs(article_body)
+        if len(paragraph_units) == 1 and len(article_body) > max_article_chars:
+            paragraph_units = split_legal_list_items(article_body)
 
         # Keep as one article chunk when short and not deeply structured
         if len(article_body) <= max_article_chars and len(paragraph_units) == 1:

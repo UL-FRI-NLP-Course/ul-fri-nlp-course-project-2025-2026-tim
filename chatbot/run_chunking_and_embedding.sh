@@ -32,5 +32,8 @@ srun \
             export TRITON_CACHE_DIR=/models/triton_cache
             export VLLM_CACHE_ROOT=/models/vllm_cache
             
-            python /workspace/src/run_chunking_and_embedding.py
+            python /workspace/src/run_chunking_and_embedding.py \
+                --input /workspace/data/register-predpisov.jsonl \
+                --out-dir /workspace/chunks \
+                --strict-whitelist
         "
