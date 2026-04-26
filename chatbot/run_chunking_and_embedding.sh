@@ -6,7 +6,7 @@ SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 INPUT_FILE=/workspace/data/register-predpisov.jsonl
-RAG_STORE_DIR=/models/rag_store
+RAG_STORE_DIR=/workspace/data/rag_store
 CONFIG_FILE=/workspace/configs/config.yaml
 
 #my hf auth token - bregar
@@ -43,7 +43,6 @@ esac
 
 echo "Selected strategy: $STRATEGY_NAME"
 echo "Output directory: $OUT_DIR"
-echo "Host output directory: ${LLM_MODELS_DIR}${OUT_DIR#/models}"
 
 srun \
     --nodes=1 \

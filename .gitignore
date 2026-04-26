@@ -4,7 +4,7 @@ chatbot/data/register-predpisov.jsonl
 chatbot/data/drugi-splosni-in-posamicni-akti.jsonl
 chatbot/logs
 chatbot/configs/server_boot_config.yaml
-
+chatbot/data/rag_store
 
 report/**/*.aux
 report/**/*.bbl
