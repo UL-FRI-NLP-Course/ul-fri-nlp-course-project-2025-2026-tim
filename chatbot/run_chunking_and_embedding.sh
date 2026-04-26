@@ -6,6 +6,8 @@ SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 INPUT_FILE=/workspace/data/register-predpisov.jsonl
+RAG_STORE_DIR=/models/rag_store
+CONFIG_FILE=/workspace/configs/config.yaml
 
 #my hf auth token - bregar
 HUGGINGFACE_HUB_TOKEN=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
@@ -20,17 +22,17 @@ STRATEGY=${STRATEGY:-1}
 case "$STRATEGY" in
     1|normal)
         STRATEGY_NAME=normal
-        OUT_DIR=/workspace/rag_store/register_predpisov_normal
+        OUT_DIR=${RAG_STORE_DIR}/register_predpisov_normal
         CHUNK_FLAGS=""
         ;;
     2|whitelist)
         STRATEGY_NAME=whitelist
-        OUT_DIR=/workspace/rag_store/register_predpisov_whitelist
+        OUT_DIR=${RAG_STORE_DIR}/register_predpisov_whitelist
         CHUNK_FLAGS="--strict-whitelist"
         ;;
     3|all|all-laws)
         STRATEGY_NAME=all_laws
-        OUT_DIR=/workspace/rag_store/register_predpisov_all_laws
+        OUT_DIR=${RAG_STORE_DIR}/register_predpisov_all_laws
         CHUNK_FLAGS="--all-laws --keep-nonparsed"
         ;;
     *)
@@ -41,6 +43,7 @@ esac
 
 echo "Selected strategy: $STRATEGY_NAME"
 echo "Output directory: $OUT_DIR"
+echo "Host output directory: ${LLM_MODELS_DIR}${OUT_DIR#/models}"
 
 srun \
     --nodes=1 \
@@ -66,9 +69,13 @@ srun \
             export TORCH_HOME=/models/torch_cache
             export TRITON_CACHE_DIR=/models/triton_cache
             export VLLM_CACHE_ROOT=/models/vllm_cache
+
+            EMBEDDING_MODEL=\$(PYTHONPATH=/workspace/src python -c \"from ChatbotSettings import load_settings; print(load_settings('${CONFIG_FILE}').embedding_model)\")
+            echo 'Embedding model: ' \${EMBEDDING_MODEL}
             
             python /workspace/src/run_chunking_and_embedding.py \
                 --input $INPUT_FILE \
                 --out-dir $OUT_DIR \
+                --model \${EMBEDDING_MODEL} \
                 $CHUNK_FLAGS
         "
