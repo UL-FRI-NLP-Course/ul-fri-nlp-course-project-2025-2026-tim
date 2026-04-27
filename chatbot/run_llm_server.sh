@@ -13,7 +13,7 @@ srun \
     --cpus-per-task=4 \
     --gres=gpu:1 \
     --partition=gpu \
-    --time=00:30:00 \
+    --time=01:30:00 \
     --pty \
     singularity exec --nv \
         --overlay $OVERLAY_FILE:ro \

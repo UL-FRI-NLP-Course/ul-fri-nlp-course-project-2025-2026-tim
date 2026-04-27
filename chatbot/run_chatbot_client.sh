@@ -2,6 +2,7 @@
 
 SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
+LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
 srun \
     --nodes=1 \
@@ -13,6 +14,7 @@ srun \
     singularity exec \
         --overlay $OVERLAY_FILE:ro \
         -B $(pwd):/workspace \
+        -B ${LLM_MODELS_DIR}:/models \
         $SIF_FILE \
         bash -c "
             echo 'Running on: ' \$(hostname)

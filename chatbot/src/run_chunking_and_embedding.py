@@ -15,6 +15,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Any
 import torch
+import os
 
 try:
     from tqdm import tqdm
@@ -34,14 +35,13 @@ from Chunking import (
 
 
 
-
 def embed_texts(
     texts: List[str],
     model_name: str,
     batch_size: int,
     normalize_embeddings: bool
 ) -> Any:
-    model_save_dir = f'/models/rag_embedding/{model_name}'
+    model_save_dir = f'/models/{model_name}'
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"[INFO] Using device: {device}")
@@ -59,7 +59,6 @@ def embed_texts(
         show_progress_bar=True,
         convert_to_numpy=True,
         normalize_embeddings=normalize_embeddings,
-        device=device
     )
 
     return embeddings.astype("float32")
@@ -248,17 +247,15 @@ def main() -> None:
             all_chunks.extend(chunks)
 
         except Exception as e:
-            # ---- HARD FAIL-SAFE LOGGING ----
             print("\n[FAULTY RECORD]")
             print(f"record_id: {obj.get('id')}")
             print(f"naziv: {obj.get('naziv')}")
             print(f"error: {str(e)}")
 
-            # print truncated text to avoid flooding logs
             raw_text = obj.get("text", "")
             if raw_text:
                 print("text_preview:")
-                print(raw_text[:1000])  # first 1000 chars only
+                print(raw_text[:1000])
 
             print("-" * 80)
 
@@ -273,6 +270,7 @@ def main() -> None:
     embeddings_shape = None
     if not args.chunks_only:
         texts = [embedding_text(chunk, args.passage_prefix) for chunk in all_chunks]
+                
         embeddings = embed_texts(
             texts=texts,
             model_name=args.model,
