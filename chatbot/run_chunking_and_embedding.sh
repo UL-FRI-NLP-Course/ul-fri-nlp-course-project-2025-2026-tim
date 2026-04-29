@@ -76,5 +76,6 @@ srun \
                 --input $INPUT_FILE \
                 --out-dir $OUT_DIR \
                 --model \${EMBEDDING_MODEL} \
+                --no-faiss \
                 $CHUNK_FLAGS
         "

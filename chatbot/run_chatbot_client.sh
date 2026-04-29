@@ -8,10 +8,11 @@ srun \
     --nodes=1 \
     --ntasks=1 \
     --cpus-per-task=4 \
+    --gres=gpu:1 \
     --partition=gpu \
     --time=00:10:00 \
     --pty \
-    singularity exec \
+    singularity exec --nv \
         --overlay $OVERLAY_FILE:ro \
         -B $(pwd):/workspace \
         -B ${LLM_MODELS_DIR}:/models \

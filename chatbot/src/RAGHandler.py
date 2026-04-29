@@ -25,7 +25,7 @@ class RAGHandler:
         # )
         
         # MODEL INIT
-        device = "cuda" if torch.cuda.is_available() and settings.model_run_device == "cuda" else "cpu"
+        device = "cuda" if torch.cuda.is_available() and settings.nn_device == "cuda" else "cpu"
         print(f"[INFO] RAG Using device: {device}")
 
         embedding_model_path = os.path.join(settings.model_dir_path, settings.embedding_model)
@@ -153,32 +153,49 @@ class RAGHandler:
         context_blocks = []
 
         for i, chunk in enumerate(reordered_chunks):
-            record_id = chunk['record_id']
             law_title = chunk['law_title']
             article_label = chunk['article_label']
             paragraph_number = chunk.get('paragraph_number')
             text = chunk.get('chunk_raw_text')
 
-            header = f"{law_title}, {article_label}"
-            if paragraph_number:
-                header += f", odst. {paragraph_number}"
+            block_lines = [
+                f"[{i+1}]",
+                f"ZAKON: {law_title}",
+                f"ČLEN: {article_label}",
+            ]
 
-            context_blocks.append(f"[{i+1}] {header}\n{text}")
+            if paragraph_number:
+                block_lines.append(f"ODSTAVEK: {paragraph_number}")
+
+            block_lines.append("BESEDILO:")
+            block_lines.append(text.strip())
+
+            context_blocks.append("\n".join(block_lines))
 
         context_str = "\n\n".join(context_blocks)
 
-        prompt = f"""
-        Relevant legal context (use for answering):
+        rag_prompt = "\n".join([
+            "KONTEKST (relevantni pravni viri):",
+            "",
+            "Spodaj so odlomki slovenske zakonodaje. Vsak blok vsebuje:",
+            "- ZAKON (ime zakona)",
+            "- ČLEN",
+            "- ODSTAVEK (če obstaja)",
+            "- BESEDILO",
+            "",
+            context_str,
+            "",
+            "NAVODILA ZA UPORABO KONTEKSTA:",
+            "",
+            "- Odgovarjaj izključno na podlagi zgornjega konteksta.",
+            "- Ne uporabljaj zunanjega znanja, če ni nujno potrebno.",
+            "- Vedno jasno navedi zakon in člen, na katerega se sklicuješ.",
+            '- Če odgovor ni neposredno razviden iz konteksta, napiši:',
+            '  "Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti."',
+            "- Ne izmišljuj si zakonov ali členov.",
+            "- Če obstajajo možne izjeme ali posebni pogoji, jih omeni, če so razvidni iz konteksta.",
+        ])
 
-        {context_str}
-
-        Instructions:
-        - Answer the user's question using ONLY the context above
-        - Cite sources using [number] notation (e.g., [1], [2])
-        - If the answer is not contained in the context, say you do not know
-        - Be precise and concise
-        """
-
-        print(prompt)
+        #print(rag_prompt)
         
-        return ""
+        return rag_prompt
