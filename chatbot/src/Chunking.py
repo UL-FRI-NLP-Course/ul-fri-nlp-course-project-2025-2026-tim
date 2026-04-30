@@ -23,7 +23,7 @@ python parse_coleslaw.py \
 
 Optional:
   --strict-whitelist          keep only explicitly whitelisted law codes
-  --max-article-chars 1500    split long articles into paragraph chunks
+  --max-article-chars 1500    kept for CLI compatibility; articles are not split
   --min-keyword-matches 2     for non-whitelist records, require N keyword hits
   --keep-nonparsed            keep fallback whole-document chunk if parsing fails
 
@@ -31,8 +31,7 @@ Notes
 -----
 - This is a baseline parser. Slovenian legal texts vary in formatting, so inspect output.
 - Recommended retrieval unit:
-    * article-level chunk for short articles
-    * paragraph-level chunk for long articles
+    * one complete article / člen per chunk, so retrieved citations are not cut off
 """
 
 from __future__ import annotations
@@ -358,10 +357,17 @@ def assign_chapter(article_start: int, chapter_positions: List[Tuple[int, str]])
 
 
 def find_article_matches(text: str) -> List[re.Match]:
-    matches = list(ARTICLE_LINE_RE.finditer(text))
-    if matches:
-        return matches
-    return list(ARTICLE_INLINE_RE.finditer(text))
+    matches = list(ARTICLE_LINE_RE.finditer(text)) + list(ARTICLE_INLINE_RE.finditer(text))
+    matches.sort(key=lambda m: m.start())
+
+    deduped: List[re.Match] = []
+    seen_starts = set()
+    for match in matches:
+        if match.start() in seen_starts:
+            continue
+        deduped.append(match)
+        seen_starts.add(match.start())
+    return deduped
 
 
 def parse_articles(text: str) -> List[dict]:
@@ -374,22 +380,23 @@ def parse_articles(text: str) -> List[dict]:
         start = match.start()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         block = text[start:end].strip()
+        body_block = text[match.end():end].strip()
 
-        lines = [ln.strip() for ln in block.splitlines() if ln.strip()]
-        if not lines:
+        if not block:
             continue
 
         article_number = match.group(1)
-        article_label = lines[0]
+        article_label = f"{article_number}. člen"
 
         article_heading = None
-        body_start_idx = 1
-        if len(lines) > 1 and re.fullmatch(r"\(.+\)", lines[1]):
-            article_heading = lines[1][1:-1].strip()
-            body_start_idx = 2
+        body_lines = [ln.strip() for ln in body_block.splitlines() if ln.strip()]
+        body_start_idx = 0
+        if body_lines and re.fullmatch(r"\(.+\)", body_lines[0]):
+            article_heading = body_lines[0][1:-1].strip()
+            body_start_idx = 1
 
         body_lines = [
-            line for line in lines[body_start_idx:]
+            line for line in body_lines[body_start_idx:]
             if not is_structural_heading(line)
         ]
         article_body = normalize_whitespace("\n".join(body_lines))
@@ -609,117 +616,40 @@ def parse_record_to_chunks(
         article_label = article["article_label"]
         article_heading = article["article_heading"]
 
-        paragraph_units = split_paragraphs(article_body)
-        if len(paragraph_units) == 1 and len(article_body) > max_article_chars:
-            paragraph_units = split_legal_list_items(article_body)
-
-        # Keep as one article chunk when short and not deeply structured
-        if len(article_body) <= max_article_chars and len(paragraph_units) == 1:
-            tags = assign_domain_tags(law_code, record.naziv, article_body)
-            chunk_text = article_body.strip()
-            output.append(
-                Chunk(
-                    chunk_id=make_chunk_id(record.mopedId, article_number, None),
-                    record_id=record.id,
-                    law_title=record.naziv,
-                    law_code=law_code,
-                    mopedId=record.mopedId,
-                    eva=record.eva,
-                    epa=record.epa,
-                    sop=record.sop,
-                    chapter=chapter,
-                    article_number=article_number,
-                    article_label=article_label,
-                    article_heading=article_heading,
-                    paragraph_number=None,
-                    domain_tags=tags,
-                    source_type="COLESLAW",
-                    text=chunk_text,
-                    formatted_text=make_formatted_text(
-                        record.naziv,
-                        law_code,
-                        chapter,
-                        article_label,
-                        article_heading,
-                        None,
-                        chunk_text,
-                    ),
-                )
-            )
+        if not article_body:
             continue
 
-        # Paragraph-level chunks
-        for para_number, para_text in paragraph_units:
-            if len(para_text) <= max_article_chars:
-                tags = assign_domain_tags(law_code, record.naziv, para_text)
-                output.append(
-                    Chunk(
-                        chunk_id=make_chunk_id(record.mopedId, article_number, para_number),
-                        record_id=record.id,
-                        law_title=record.naziv,
-                        law_code=law_code,
-                        mopedId=record.mopedId,
-                        eva=record.eva,
-                        epa=record.epa,
-                        sop=record.sop,
-                        chapter=chapter,
-                        article_number=article_number,
-                        article_label=article_label,
-                        article_heading=article_heading,
-                        paragraph_number=para_number,
-                        domain_tags=tags,
-                        source_type="COLESLAW",
-                        text=para_text,
-                        formatted_text=make_formatted_text(
-                            record.naziv,
-                            law_code,
-                            chapter,
-                            article_label,
-                            article_heading,
-                            para_number,
-                            para_text,
-                        ),
-                    )
-                )
-            else:
-                # Fallback split for very long paragraphs
-                subchunks = split_long_text(para_text, max_chars=max_article_chars, overlap=150)
-                for idx, sub in enumerate(subchunks, start=1):
-                    tags = assign_domain_tags(law_code, record.naziv, sub)
-                    output.append(
-                        Chunk(
-                            chunk_id=make_chunk_id(
-                                record.mopedId,
-                                article_number,
-                                para_number,
-                                subchunk_idx=idx,
-                            ),
-                            record_id=record.id,
-                            law_title=record.naziv,
-                            law_code=law_code,
-                            mopedId=record.mopedId,
-                            eva=record.eva,
-                            epa=record.epa,
-                            sop=record.sop,
-                            chapter=chapter,
-                            article_number=article_number,
-                            article_label=article_label,
-                            article_heading=article_heading,
-                            paragraph_number=para_number,
-                            domain_tags=tags,
-                            source_type="COLESLAW",
-                            text=sub,
-                            formatted_text=make_formatted_text(
-                                record.naziv,
-                                law_code,
-                                chapter,
-                                article_label,
-                                article_heading,
-                                para_number,
-                                sub,
-                            ),
-                        )
-                    )
+        tags = assign_domain_tags(law_code, record.naziv, article_body)
+        chunk_text = article_body.strip()
+        output.append(
+            Chunk(
+                chunk_id=make_chunk_id(record.mopedId, article_number, None),
+                record_id=record.id,
+                law_title=record.naziv,
+                law_code=law_code,
+                mopedId=record.mopedId,
+                eva=record.eva,
+                epa=record.epa,
+                sop=record.sop,
+                chapter=chapter,
+                article_number=article_number,
+                article_label=article_label,
+                article_heading=article_heading,
+                paragraph_number=None,
+                domain_tags=tags,
+                source_type="COLESLAW",
+                text=chunk_text,
+                formatted_text=make_formatted_text(
+                    record.naziv,
+                    law_code,
+                    chapter,
+                    article_label,
+                    article_heading,
+                    None,
+                    chunk_text,
+                ),
+            )
+        )
 
     return output
 
@@ -742,7 +672,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--max-article-chars",
         type=int,
         default=1500,
-        help="Max chars before splitting article/paragraph chunks further",
+        help="Deprecated compatibility option; chunks remain complete articles.",
     )
     parser.add_argument(
         "--min-keyword-matches",
