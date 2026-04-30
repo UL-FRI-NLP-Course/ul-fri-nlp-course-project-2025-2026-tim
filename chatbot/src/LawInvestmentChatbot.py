@@ -53,7 +53,7 @@ class LawInvestmentChatbot:
 
 
     def _handle_question(self, user_text_raw: str):
-        print("Assistant:", end=" ", flush=True)
+        print("Vprašanje:", end=" ", flush=True)
         full_response = ""
 
         rag_context = self.RAG.build_RAG_prompt(user_text_raw, self.chat_history)
@@ -76,7 +76,8 @@ class LawInvestmentChatbot:
                     "max_tokens": self.settings.llm_max_new_tokens,
                     "presence_penalty": self.settings.llm_presence_penalty,
                     "frequency_penalty": self.settings.llm_frequency_penalty,
-                    "stream": True
+                    "stream": True,
+                    "echo" : False
                 },
                 stream=True,
                 timeout=300
@@ -129,12 +130,14 @@ class LawInvestmentChatbot:
         self.running = True
 
         print("\n===============================\n")
-        print("Law Investment Chatbot (Remote LLM)")
+        print("Law Investment Chatbot")
         print("Type /help for commands.\n")
+        
+        print("\nAsistent: Kako vam lahko pomagam?")
 
         while self.running:
             try:
-                user_input_string = input(">> ").strip()
+                user_input_string = input("\n>> ").strip()
 
                 if not user_input_string:
                     continue

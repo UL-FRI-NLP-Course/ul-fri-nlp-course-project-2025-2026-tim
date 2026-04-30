@@ -11,6 +11,11 @@ from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, List
+import numpy as np
+from sentence_transformers import SentenceTransformer
+from typing import List, Any
+import torch
+import os
 
 try:
     from tqdm import tqdm
@@ -29,16 +34,25 @@ from Chunking import (
 )
 
 
+
 def embed_texts(
     texts: List[str],
     model_name: str,
     batch_size: int,
-    normalize_embeddings: bool,
+    normalize_embeddings: bool
 ) -> Any:
-    import numpy as np
-    from sentence_transformers import SentenceTransformer
+    model_save_dir = f'/models/{model_name}'
 
-    model = SentenceTransformer(model_name)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"[INFO] Using device: {device}")
+
+    model = SentenceTransformer(
+        model_name,
+        cache_folder=model_save_dir,
+        device=device
+    )
+    print(f"[INFO] Model device: {model.device}")
+
     embeddings = model.encode(
         texts,
         batch_size=batch_size,
@@ -46,6 +60,7 @@ def embed_texts(
         convert_to_numpy=True,
         normalize_embeddings=normalize_embeddings,
     )
+
     return embeddings.astype("float32")
 
 
@@ -154,53 +169,98 @@ def main() -> None:
 
     for obj in tqdm(read_jsonl(args.input), desc="Parsing and chunking"):
         counters["records_total"] += 1
-        record = RawRecord(
-            id=obj.get("id"),
-            naziv=obj.get("naziv", ""),
-            mopedId=obj.get("mopedId"),
-            eva=obj.get("eva"),
-            epa=obj.get("epa"),
-            sop=obj.get("sop"),
-            text=obj.get("text", "") or "",
-        )
 
-        if args.all_laws:
-            relevant, reason = True, "all_laws"
-        else:
-            relevant, reason = is_relevant_record(
-                record.naziv,
-                record.text,
-                strict_whitelist=args.strict_whitelist,
-                min_keyword_matches=args.min_keyword_matches,
+        try:
+            record = RawRecord(
+                id=obj.get("id"),
+                naziv=obj.get("naziv", ""),
+                mopedId=obj.get("mopedId"),
+                eva=obj.get("eva"),
+                epa=obj.get("epa"),
+                sop=obj.get("sop"),
+                text=obj.get("text", "") or "",
             )
 
-        filter_reasons[reason] += 1
-        if not relevant:
-            counters["records_skipped"] += 1
+            if args.all_laws:
+                relevant, reason = True, "all_laws"
+            else:
+                relevant, reason = is_relevant_record(
+                    record.naziv,
+                    record.text,
+                    strict_whitelist=args.strict_whitelist,
+                    min_keyword_matches=args.min_keyword_matches,
+                )
+
+            filter_reasons[reason] += 1
+            if not relevant:
+                counters["records_skipped"] += 1
+                continue
+
+            counters["records_kept"] += 1
+
+            law_code = extract_law_code(record.naziv) or "UNKNOWN"
+            law_record_counts[law_code] += 1
+
+            chunks = parse_record_to_chunks(
+                record,
+                max_article_chars=args.max_chars,
+                keep_nonparsed=args.keep_nonparsed,
+            )
+
+            if not chunks:
+                raise ValueError("No chunks produced")
+
+            valid_chunks = []
+
+            for i, chunk in enumerate(chunks):
+
+                if not hasattr(chunk, "text"):
+                    raise ValueError("Chunk missing text field")
+
+                if not isinstance(chunk.text, str):
+                    raise TypeError("Chunk text is not string")
+
+                text = chunk.text.encode("utf-8", "ignore").decode("utf-8").strip()
+
+                if len(text) == 0:
+                    print(f"[EMPTY CHUNK] record_id={record.id}, chunk_index={i}")
+                    continue
+
+                if len(text) > 20000:
+                    raise ValueError(f"Chunk too long ({len(text)} chars)")
+
+                chunk.text = text
+                valid_chunks.append(chunk)
+
+                for tag in chunk.domain_tags:
+                    tag_counts[tag] += 1
+
+            if not valid_chunks:
+                raise ValueError("All chunks empty after filtering")
+
+            chunks = valid_chunks
+
+            counters["records_with_chunks"] += 1
+            counters["chunks_total"] += len(chunks)
+            law_chunk_counts[law_code] += len(chunks)
+
+            all_chunks.extend(chunks)
+
+        except Exception as e:
+            print("\n[FAULTY RECORD]")
+            print(f"record_id: {obj.get('id')}")
+            print(f"naziv: {obj.get('naziv')}")
+            print(f"error: {str(e)}")
+
+            raw_text = obj.get("text", "")
+            if raw_text:
+                print("text_preview:")
+                print(raw_text[:1000])
+
+            print("-" * 80)
+
+            counters["records_faulty"] += 1
             continue
-
-        counters["records_kept"] += 1
-        law_code = extract_law_code(record.naziv) or "UNKNOWN"
-        law_record_counts[law_code] += 1
-
-        chunks = parse_record_to_chunks(
-            record,
-            max_article_chars=args.max_chars,
-            keep_nonparsed=args.keep_nonparsed,
-        )
-        if not chunks:
-            counters["records_no_chunks"] += 1
-            continue
-
-        counters["records_with_chunks"] += 1
-        counters["chunks_total"] += len(chunks)
-        law_chunk_counts[law_code] += len(chunks)
-
-        for chunk in chunks:
-            for tag in chunk.domain_tags:
-                tag_counts[tag] += 1
-
-        all_chunks.extend(chunks)
 
     if not all_chunks:
         raise RuntimeError("No chunks were created. Check filtering settings or input format.")
@@ -210,6 +270,7 @@ def main() -> None:
     embeddings_shape = None
     if not args.chunks_only:
         texts = [embedding_text(chunk, args.passage_prefix) for chunk in all_chunks]
+                
         embeddings = embed_texts(
             texts=texts,
             model_name=args.model,

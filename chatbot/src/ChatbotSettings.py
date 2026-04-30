@@ -8,7 +8,10 @@ class ChatbotSettings:
     chatbot_dir_path: str = '/workspace'
     server_boot_file_name: str = 'server_boot_config.yaml'
     system_prompt_file_name: str = 'system_prompt.yaml'
+    rag_data_path: str = 'data/rag_store/register_predpisov_all_laws'
+    
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    reranking_model: str = 'cross-encoder/ms-marco-MiniLM-L6-v2'
     LLM_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     top_k_chunks: int = 50
     reorder_top_n_chunks: int = 10
@@ -33,7 +36,9 @@ class ChatbotSettings:
             f"  chatbot_dir_path: {self.chatbot_dir_path}\n"
             f"  server_boot_file_name: {self.server_boot_file_name}\n"
             f"  system_prompt_file_name: {self.system_prompt_file_name}\n"
+            f"  rag_data_path: {self.rag_data_path}\n"
             f"  embedding_model: {self.embedding_model}\n"
+            f"  reranking_model: {self.reranking_model}\n"
             f"  LLM_model: {self.LLM_model}\n"
             f"  top_k_chunks: {self.top_k_chunks}\n"
             f"  reorder_top_n_chunks: {self.reorder_top_n_chunks}\n"

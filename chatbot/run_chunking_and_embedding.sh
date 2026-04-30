@@ -6,7 +6,7 @@ SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 INPUT_FILE=/workspace/data/register-predpisov.jsonl
-RAG_STORE_DIR=/models/rag_store
+RAG_STORE_DIR=/workspace/data/rag_store
 CONFIG_FILE=/workspace/configs/config.yaml
 
 #my hf auth token - bregar
@@ -43,7 +43,6 @@ esac
 
 echo "Selected strategy: $STRATEGY_NAME"
 echo "Output directory: $OUT_DIR"
-echo "Host output directory: ${LLM_MODELS_DIR}${OUT_DIR#/models}"
 
 srun \
     --nodes=1 \
@@ -63,12 +62,12 @@ srun \
             source /opt/venv/bin/activate
 
             export HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
-            export HF_HOME=/models/hf_cache
-            export TRANSFORMERS_CACHE=/models/hf_cache
-            export HUGGINGFACE_HUB_CACHE=/models/hf_cache
-            export TORCH_HOME=/models/torch_cache
-            export TRITON_CACHE_DIR=/models/triton_cache
-            export VLLM_CACHE_ROOT=/models/vllm_cache
+            export HF_HOME=/models/rag_embedding/hf_cache
+            export TRANSFORMERS_CACHE=/models/rag_embedding/hf_cache
+            export HUGGINGFACE_HUB_CACHE=/models/rag_embedding/hf_cache
+            export TORCH_HOME=/models/rag_embedding/torch_cache
+            export TRITON_CACHE_DIR=/models/rag_embedding/triton_cache
+            export VLLM_CACHE_ROOT=/models/rag_embedding/vllm_cache
 
             EMBEDDING_MODEL=\$(PYTHONPATH=/workspace/src python -c \"from ChatbotSettings import load_settings; print(load_settings('${CONFIG_FILE}').embedding_model)\")
             echo 'Embedding model: ' \${EMBEDDING_MODEL}
@@ -77,5 +76,6 @@ srun \
                 --input $INPUT_FILE \
                 --out-dir $OUT_DIR \
                 --model \${EMBEDDING_MODEL} \
+                --no-faiss \
                 $CHUNK_FLAGS
         "
