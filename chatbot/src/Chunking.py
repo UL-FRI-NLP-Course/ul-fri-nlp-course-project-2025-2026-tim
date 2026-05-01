@@ -722,4 +722,3 @@ def main() -> None:
             )
 
     return output
-
