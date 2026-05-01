@@ -16,12 +16,20 @@ from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 # Regex patterns
 # ----------------------------
 
-ARTICLE_LINE_RE = re.compile(r"(?m)^\s*(\d+)\.\s*člen\s*$")
-ARTICLE_INLINE_RE = re.compile(r"(?m)^\s*(\d+)\.\s*člen\b")
+ROMAN_ARTICLE_NUMBER = r"[IVXLCDM]+"
+ARTICLE_NUMBER = r"\d+"
+ARTICLE_LINE_RE = re.compile(rf"(?mi)^\s*({ARTICLE_NUMBER})\.\s*člen\s*$")
+ARTICLE_INLINE_RE = re.compile(rf"(?mi)^\s*({ARTICLE_NUMBER})\.\s*člen\b")
+ARTICLE_FORWARD_RE = re.compile(rf"(?mi)^\s*člen\s+({ARTICLE_NUMBER})\b")
+ROMAN_ARTICLE_LINE_RE = re.compile(rf"(?mi)^\s*({ROMAN_ARTICLE_NUMBER})\.\s*člen\s*$")
+ROMAN_ARTICLE_INLINE_RE = re.compile(rf"(?mi)^\s*({ROMAN_ARTICLE_NUMBER})\.\s*člen\b")
 PARAGRAPH_RE = re.compile(r"(?m)^\s*\((\d+)\)\s+")
 LEGAL_NUMBERED_LIST_ITEM_RE = re.compile(r"(?m)^\s*(\d+[.)])\s+")
 LEGAL_LETTERED_LIST_ITEM_RE = re.compile(r"(?m)^\s*([a-zčšž]\))\s+")
 LEGAL_LIST_ITEM_RE = re.compile(r"(?m)^\s*((?:\d+[.)]|[a-zčšž]\)))\s+")
+INTERNAL_ARTICLE_MARKER_RE = re.compile(
+    rf"(?mi)^\s*(?:Article\s+(?:{ROMAN_ARTICLE_NUMBER}|\d+)|{ROMAN_ARTICLE_NUMBER}\.\s*člen(?:\s*[–-].*)?)\s*$"
+)
 LAW_CODE_RE = re.compile(r"\(([^()]{2,30})\)\s*$")
 
 # Typical chapter / part headings in Slovenian laws:
@@ -193,6 +201,7 @@ class Chunk:
     article_label: Optional[str]
     article_heading: Optional[str]
     paragraph_number: Optional[str]
+    chunk_part: Optional[str]
     domain_tags: List[str]
     source_type: str
     text: str
@@ -272,7 +281,7 @@ def strip_leading_noise(text: str) -> str:
     started_articles = False
 
     for line in lines:
-        if ARTICLE_INLINE_RE.match(line):
+        if ARTICLE_INLINE_RE.match(line) or ARTICLE_FORWARD_RE.match(line):
             started_articles = True
 
         if not started_articles:
@@ -324,7 +333,15 @@ def assign_chapter(article_start: int, chapter_positions: List[Tuple[int, str]])
 
 
 def find_article_matches(text: str) -> List[re.Match]:
-    matches = list(ARTICLE_LINE_RE.finditer(text)) + list(ARTICLE_INLINE_RE.finditer(text))
+    primary_matches = (
+        list(ARTICLE_LINE_RE.finditer(text))
+        + list(ARTICLE_INLINE_RE.finditer(text))
+        + list(ARTICLE_FORWARD_RE.finditer(text))
+    )
+    matches = primary_matches or (
+        list(ROMAN_ARTICLE_LINE_RE.finditer(text))
+        + list(ROMAN_ARTICLE_INLINE_RE.finditer(text))
+    )
     matches.sort(key=lambda m: m.start())
 
     deduped: List[re.Match] = []
@@ -347,13 +364,18 @@ def parse_articles(text: str) -> List[dict]:
         start = match.start()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         block = text[start:end].strip()
-        body_block = text[match.end():end].strip()
 
         if not block:
             continue
 
         article_number = match.group(1)
-        article_label = f"{article_number}. člen"
+        first_line = block.splitlines()[0].strip()
+        if first_line.lower().startswith("člen "):
+            article_label = f"Člen {article_number}"
+            body_block = block if len(first_line.split()) > 2 else text[match.end():end].strip()
+        else:
+            article_label = f"{article_number}. člen"
+            body_block = text[match.end():end].strip()
 
         article_heading = None
         body_lines = [ln.strip() for ln in body_block.splitlines() if ln.strip()]
@@ -457,6 +479,79 @@ def split_long_text(text: str, max_chars: int = 1200, overlap: int = 150) -> Lis
     return chunks
 
 
+def split_by_internal_article_markers(text: str) -> List[str]:
+    matches = list(INTERNAL_ARTICLE_MARKER_RE.finditer(text))
+    if len(matches) < 2:
+        return [text.strip()]
+
+    parts: List[str] = []
+    prefix = text[:matches[0].start()].strip()
+    if prefix:
+        parts.append(prefix)
+
+    for i, match in enumerate(matches):
+        start = match.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        part = normalize_whitespace(text[start:end])
+        if part:
+            parts.append(part)
+
+    return parts or [text.strip()]
+
+
+def pack_text_units(units: List[str], max_chars: int) -> List[str]:
+    packed: List[str] = []
+    current: List[str] = []
+    current_len = 0
+
+    for unit in units:
+        unit = normalize_whitespace(unit)
+        if not unit:
+            continue
+
+        if len(unit) > max_chars:
+            if current:
+                packed.append(normalize_whitespace("\n".join(current)))
+                current = []
+                current_len = 0
+            packed.extend(split_long_text(unit, max_chars=max_chars, overlap=150))
+            continue
+
+        next_len = current_len + len(unit) + (1 if current else 0)
+        if current and next_len > max_chars:
+            packed.append(normalize_whitespace("\n".join(current)))
+            current = [unit]
+            current_len = len(unit)
+        else:
+            current.append(unit)
+            current_len = next_len
+
+    if current:
+        packed.append(normalize_whitespace("\n".join(current)))
+
+    return packed
+
+
+def split_article_body(article_body: str, max_chars: int) -> List[str]:
+    article_body = normalize_whitespace(article_body)
+    if len(article_body) <= max_chars:
+        return [article_body]
+
+    internal_article_units = split_by_internal_article_markers(article_body)
+    if len(internal_article_units) > 1:
+        return pack_text_units(internal_article_units, max_chars=max_chars)
+
+    paragraph_units = [text for _, text in split_paragraphs(article_body) if text.strip()]
+    if len(paragraph_units) > 1:
+        return pack_text_units(paragraph_units, max_chars=max_chars)
+
+    list_units = [text for _, text in split_legal_list_items(article_body) if text.strip()]
+    if len(list_units) > 1:
+        return pack_text_units(list_units, max_chars=max_chars)
+
+    return split_long_text(article_body, max_chars=max_chars, overlap=150)
+
+
 def assign_domain_tags(law_code: Optional[str], law_title: str, text: str) -> List[str]:
     haystack = f"{law_title}\n{text}".lower()
     tags = set()
@@ -488,6 +583,7 @@ def make_formatted_text(
     article_label: Optional[str],
     article_heading: Optional[str],
     paragraph_number: Optional[str],
+    chunk_part: Optional[str],
     text: str,
 ) -> str:
     parts = []
@@ -507,6 +603,8 @@ def make_formatted_text(
             parts.append(f"Odstavek/točka: {paragraph_number}")
         else:
             parts.append(f"Odstavek: ({paragraph_number})")
+    if chunk_part:
+        parts.append(f"Del člena: {chunk_part}")
 
     parts.append(f"Besedilo: {text}")
     return " | ".join(parts)
@@ -576,6 +674,7 @@ def parse_record_to_chunks(
                     article_label=None,
                     article_heading=None,
                     paragraph_number=None,
+                    chunk_part=f"{idx}/{len(subchunks)}" if len(subchunks) > 1 else None,
                     domain_tags=tags,
                     source_type="COLESLAW",
                     text=sub,
@@ -586,6 +685,7 @@ def parse_record_to_chunks(
                         article_label=None,
                         article_heading=None,
                         paragraph_number=None,
+                        chunk_part=f"{idx}/{len(subchunks)}" if len(subchunks) > 1 else None,
                         text=sub,
                     ),
                 )
@@ -607,37 +707,46 @@ def parse_record_to_chunks(
         if not article_body:
             continue
 
-        tags = assign_domain_tags(law_code, record.naziv, article_body)
-        chunk_text = article_body.strip()
-        output.append(
-            Chunk(
-                chunk_id=make_chunk_id(record.mopedId, article_number, None),
-                record_id=record.id,
-                law_title=record.naziv,
-                law_code=law_code,
-                mopedId=record.mopedId,
-                eva=record.eva,
-                epa=record.epa,
-                sop=record.sop,
-                chapter=chapter,
-                article_number=article_number,
-                article_label=article_label,
-                article_heading=article_heading,
-                paragraph_number=None,
-                domain_tags=tags,
-                source_type="COLESLAW",
-                text=chunk_text,
-                formatted_text=make_formatted_text(
-                    record.naziv,
-                    law_code,
-                    chapter,
-                    article_label,
-                    article_heading,
-                    None,
-                    chunk_text,
+        article_parts = split_article_body(article_body, max_article_chars)
+        for idx, chunk_text in enumerate(article_parts, start=1):
+            tags = assign_domain_tags(law_code, record.naziv, chunk_text)
+            chunk_part = f"{idx}/{len(article_parts)}" if len(article_parts) > 1 else None
+            output.append(
+                Chunk(
+                    chunk_id=make_chunk_id(
+                        record.mopedId,
+                        article_number,
+                        None,
+                        subchunk_idx=idx if len(article_parts) > 1 else None,
+                    ),
+                    record_id=record.id,
+                    law_title=record.naziv,
+                    law_code=law_code,
+                    mopedId=record.mopedId,
+                    eva=record.eva,
+                    epa=record.epa,
+                    sop=record.sop,
+                    chapter=chapter,
+                    article_number=article_number,
+                    article_label=article_label,
+                    article_heading=article_heading,
+                    paragraph_number=None,
+                    chunk_part=chunk_part,
+                    domain_tags=tags,
+                    source_type="COLESLAW",
+                    text=chunk_text,
+                    formatted_text=make_formatted_text(
+                        record.naziv,
+                        law_code,
+                        chapter,
+                        article_label,
+                        article_heading,
+                        None,
+                        chunk_part,
+                        chunk_text,
+                    ),
                 ),
             )
-        )
 
     return output
 
@@ -660,7 +769,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--max-article-chars",
         type=int,
         default=1500,
-        help="Deprecated compatibility option; chunks remain complete articles.",
+        help="Maximum chars per chunk; oversized articles are split while keeping article metadata.",
     )
     parser.add_argument(
         "--min-keyword-matches",
@@ -715,10 +824,63 @@ def main() -> None:
             counters["records_skipped"] += 1
             reason_counters[reason] += 1
             continue
-        if len(c.text) > max_article_chars:
-            raise RuntimeError(
-                f"Chunk exceeds max size after processing: {len(c.text)} chars "
-                f"(record {record.id})"
-            )
 
-    return output
+        counters["records_kept"] += 1
+        reason_counters[reason] += 1
+
+        law_code = extract_law_code(record.naziv) or "UNKNOWN"
+        law_record_counts[law_code] += 1
+
+        chunks = parse_record_to_chunks(
+            record,
+            max_article_chars=args.max_article_chars,
+            keep_nonparsed=args.keep_nonparsed,
+        )
+
+        if not chunks:
+            counters["records_no_chunks"] += 1
+            continue
+
+        counters["records_with_chunks"] += 1
+        counters["chunks_total"] += len(chunks)
+        law_chunk_counts[law_code] += len(chunks)
+
+        for chunk in chunks:
+            for tag in chunk.domain_tags:
+                tag_counters[tag] += 1
+            output_rows.append(asdict(chunk))
+
+    write_jsonl(args.output, output_rows)
+
+    report = {
+        "input_file": str(args.input),
+        "output_file": str(args.output),
+        "records_total": counters["records_total"],
+        "records_kept": counters["records_kept"],
+        "records_skipped": counters["records_skipped"],
+        "records_no_chunks": counters["records_no_chunks"],
+        "records_with_chunks": counters["records_with_chunks"],
+        "chunks_total": counters["chunks_total"],
+        "filter_reasons": dict(reason_counters),
+        "top_laws_by_chunks": law_chunk_counts.most_common(30),
+        "top_laws_by_records": law_record_counts.most_common(30),
+        "domain_tag_counts": dict(tag_counters),
+        "config": {
+            "strict_whitelist": args.strict_whitelist,
+            "max_article_chars": args.max_article_chars,
+            "min_keyword_matches": args.min_keyword_matches,
+            "keep_nonparsed": args.keep_nonparsed,
+        },
+    }
+
+    if args.report:
+        args.report.write_text(
+            json.dumps(report, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()
