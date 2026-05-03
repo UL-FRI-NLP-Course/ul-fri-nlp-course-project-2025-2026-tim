@@ -151,13 +151,13 @@ This strategy is designed to balance retrieval precision with legal interpretabi
 
 \subsection*{Chunk Embedding}
 
-Chunk embeddings are generated using the multilingual sentence-transformer model \texttt{BAAI/bge-m3}~\cite{bgem3}, which provides strong cross-lingual performance and works well for morphologically rich languages such as Slovenian.
+Chunk embeddings are generated using the multilingual sentence-transformer model \texttt{BAAI/bge-m3}~\cite{bgem3}, which provides strong multilingual performance and works well for morphologically rich languages such as Slovenian.
 
 The resulting vectors are normalized by default and stored as a NumPy matrix. A FAISS index is then optionally constructed using inner product search over the normalized embeddings, which corresponds to cosine similarity. The final output directory contains the chunk file, embedding matrix, FAISS index.
 
 \subsection*{RAG Pipeline}
 
-Upon receiving a user query, the text is embedded using \texttt{BAAI/bge-m3}, and the top 50 most similar chunks are retrieved from the RAG chunk store. These candidates are then reranked using \texttt{BAAI/bge-reranker-large}~\cite{reranker}, with the top 10 most relevant chunks retained. The selected chunks, together with their metadata (e.g., law name, article, paragraph), are used to construct a structured RAG prompt that clearly delineates the legal context and provides explicit instructions for grounded answering.
+Upon receiving a user query, the text is embedded using \texttt{BAAI/bge-m3}, and the top 50 most similar chunks are retrieved from the RAG chunk store. These candidates are then reranked using \texttt{BAAI/bge-reranker-v2-m3}~\cite{reranker}, with the top 10 most relevant chunks retained. The selected chunks, together with their metadata (e.g., law name, article, paragraph), are used to construct a structured RAG prompt that clearly delineates the legal context and provides explicit instructions for grounded answering.
 
 The RAG prompt, along with the user query, system-level formatting instructions, and conversation history, is sent to a vLLM server running \texttt{Llama-3.1-8B-Instruct}~\cite{llmllama} via the \texttt{OpenAI} API message interface. The prompt enforces strict reliance on the provided legal context, requiring the model to cite relevant laws and articles, avoid hallucinations, and explicitly indicate when the answer cannot be determined from the retrieved sources.
 
