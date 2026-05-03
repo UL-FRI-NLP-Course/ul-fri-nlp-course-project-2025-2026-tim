@@ -134,6 +134,7 @@ class RAGHandler:
                 'law_title' : chunk['law_title'],
                 'article_label' : chunk['article_label'],
                 'paragraph_number' : chunk['paragraph_number'],
+                'chunk_part' : chunk.get('chunk_part'),
                 'chunk_raw_text' : chunk['text'],
                 'cross_score' : cross
             }
@@ -156,6 +157,7 @@ class RAGHandler:
             law_title = chunk['law_title']
             article_label = chunk['article_label']
             paragraph_number = chunk.get('paragraph_number')
+            chunk_part = chunk.get('chunk_part')
             text = chunk.get('chunk_raw_text')
 
             block_lines = [
@@ -166,6 +168,8 @@ class RAGHandler:
 
             if paragraph_number:
                 block_lines.append(f"ODSTAVEK: {paragraph_number}")
+            if chunk_part:
+                block_lines.append(f"DEL ČLENA: {chunk_part}")
 
             block_lines.append("BESEDILO:")
             block_lines.append(text.strip())
@@ -181,6 +185,7 @@ class RAGHandler:
             "- ZAKON (ime zakona)",
             "- ČLEN",
             "- ODSTAVEK (če obstaja)",
+            "- DEL ČLENA (če je bil člen zaradi dolžine razdeljen)",
             "- BESEDILO",
             "",
             context_str,

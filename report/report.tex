@@ -147,6 +147,20 @@ The final dataset will be constructed by combining the above sources into a unif
 
 Overall, the combination of authoritative legal texts, explanatory government resources, and linguistically annotated corpora provides a strong foundation for building a reliable and domain-specific legal AI assistant.
 
+\section{Submission 2 - Initial Solution and Results}
+
+For the second submission we implemented an initial end-to-end baseline of the Slovenian tax and investment law chatbot. The system already covers the main components needed for retrieval-augmented generation: legal-document chunking, embedding, vector storage, neural reranking, prompt construction, local LLM serving, and an interactive command-line client. The implementation is located in the \texttt{chatbot} directory and is organized so that the indexing pipeline can be run separately from the online chatbot.
+
+\subsection{System Architecture}
+
+The baseline follows a modular RAG architecture. First, legal documents are processed offline into structured chunks and embedded into a retrieval store. At runtime, the chatbot embeds the user's question, retrieves candidate chunks from the store, reranks them with a cross-encoder, constructs a grounded prompt, and sends the final message sequence to a locally served instruction-tuned language model.
+
+The chatbot is split into two main runtime processes. The script \texttt{run\_openai\_llm\_server.py} starts a \texttt{vLLM} server with an OpenAI-compatible \texttt{/v1/chat/completions} endpoint. It loads the model configured in \texttt{configs/config.yaml}; in the current configuration this is \texttt{meta-llama/Llama-3.1-8B-Instruct}. The server writes its hostname, port, and model path into \texttt{configs/server\_boot\_config.yaml}. The client script \texttt{run\_chatbot\_client.py} then reads this file, starts \texttt{LawInvestmentChatbot}, loads the RAG components through \texttt{RAGHandler}, and provides an interactive terminal interface.
+
+This separation is useful in the HPC environment because the LLM server can run as a non-interactive GPU job, while the chatbot client can run as a separate interactive job. The model and retrieval settings are centralized in \texttt{ChatbotSettings.py} and \texttt{configs/config.yaml}, which makes it possible to switch embedding models, rerankers, generation parameters, and RAG store paths without changing the main chatbot code.
+
+For ease of development, most of the chatbot orchestration logic currently remains on the client side. The server is used mainly as a reusable OpenAI-compatible generation endpoint, while retrieval, reranking, prompt assembly, chat-history management, and response streaming are handled by the client. This choice makes iteration faster because the LLM server takes a relatively long time to load each time it is started; keeping the experimental logic in the client allows us to modify and test the RAG behavior without repeatedly restarting the model server.
+
 \section*{Methodology}
 Chatbot systems designed for domains such as investing and tax law require a high level of accuracy, reliability, and transparency in their responses. To address these requirements, the proposed approach primarily relies on retrieval-augmented generation (RAG). By integrating external domain-specific documents into the generation process, the system can provide up-to-date and factually grounded answers. Importantly, retrieved documents can be cited as references, allowing users to verify the information, which is essential in high-stakes decision-making contexts.
 
