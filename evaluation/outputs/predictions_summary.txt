@@ -1,0 +1,163 @@
+=== OVERALL SUMMARY ===
+Total examples: 29
+With generated answer: 29
+Empty / missing answer: 0
+With error: 0
+Answers containing uncertainty/refusal wording: 13
+Answers mentioning a legal source/law/article: 28
+Average answer length: 151.1 words
+Average retrieved sources per example: 10.0
+
+=== MOST COMMON TOP RETRIEVED LAWS ===
+ZDavP-2: 6
+ZDDV-1: 5
+ZDDD: 4
+ZDPN-2: 4
+ZDO: 3
+ZDoh-2: 3
+ZIZ: 1
+ZDDPO-2: 1
+ZTro-1: 1
+EZ-1: 1
+
+=== MOST COMMON GOLD LAWS ===
+ZDDD: 9
+ZDPN-2: 8
+ZDoh-2: 7
+ZDavP-2: 7
+ZDDV-1: 7
+ZTro-1: 2
+
+=== PER-EXAMPLE SNAPSHOT ===
+
+ID: ZDDD_scenario_001
+Question: Če mi mama podari stanovanje, ali moram plačati davek na darilo?
+Answer words: 201
+Retrieved sources: 10
+Top predicted source: ZDO 150. člen
+Gold laws: ZDDD
+Has uncertainty wording: True
+Mentions legal source: True
+Answer preview: KRATEK POVZETEK: Mama mora plačati davek na darilo, če podari stanovanje. PODRIBNA RAZLAGA: Podatek iz konteksta [8] ZAKON: Zakon o davkih občanov (ZDO) ČLEN: 148. člen BESEDILO: Davek na dediščine in darila se ne plačuje od tistega nepremičnega premoženja, na katerem dedič oziroma obdarjenec po veljavnih predpisih ne more pridobiti lastninske prav...
+
+ID: ZDDD_scenario_002
+Question: Če mi brat podari 30.000 EUR, ali sem oproščen davka?
+Answer words: 144
+Retrieved sources: 10
+Top predicted source: ZDDV-1 51. člen
+Gold laws: ZDDD
+Has uncertainty wording: True
+Mentions legal source: True
+Answer preview: KRATEK POVZETEK: Oprostitveni pogoji za davčno oprostitev pri darilih so določeni v Zakonu o davku na dediščine in darila (ZDDD). PODRIBNA RAZLAGA: Podatek, da vas brat podari 30.000 EUR, ne dovoljuje neposrednega zaključka, ali ste oproščeni davka. Zato je potrebno preveriti, ali se ta podatek ujema z oprostitvenimi pogoji. OPOMBA: Na podlagi poda...
+
+ID: ZDDD_edge_003
+Question: Sem kmet in v dar dobim kmetijsko zemljišče. Ali se tudi v tem primeru plača davek na darilo?
+Answer words: 125
+Retrieved sources: 10
+Top predicted source: ZDO 149. člen
+Gold laws: ZDDD
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: **Kratek povzetek:** V primeru, ko kmet dobiva v dar kmetijsko zemljišče, se davek na darilo ne plača. **Podrobna razlaga:** Zakon o davkih občanov (ZDO) in Zakon o davku na dediščine in darila (ZDDD) določata pravila za plačilo davka na darilo. V 149. členu ZDO in 10. členu ZDDD je navedeno, da davka na dediščine in darila ne plača dedič ali obdar...
+
+ID: ZDDD_scenario_004
+Question: V kakšnem roku moram prijaviti darilo, če dobim v dar nepremičnino?
+Answer words: 111
+Retrieved sources: 10
+Top predicted source: ZDDD 13. člen
+Gold laws: ZDDD
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: Kratek povzetek: Darilo, ki obsega nepremičnino, mora biti prijavljeno pri davčnem uradu, kjer nepremičnina leži, v roku 15 dni od nastanka davčne obveznosti. Podrobna razlaga: Na podlagi člena 13. Zakona o davku na dediščine in darila (ZDDD) je prijava darila, ki obsega nepremičnino, dolžnost davčnega zavezanca. Če prejemete v dar nepremičnino, mo...
+
+ID: ZDDD_edge_005
+Question: Plačal sem davek na darilo, potem pa sva pogodbo sporazumno razdrla. Ali lahko zahtevam vračilo?
+Answer words: 129
+Retrieved sources: 10
+Top predicted source: ZDDD 18. člen
+Gold laws: ZDDD
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: KRATEK POVZETEK: Da lahko zahtevate vračilo plačanega davka na darilo, morate se ujemati z določbami zakona o davku na dediščine in darila (ZDDD). PODRIBNA RAZLAGA: Na podlagi 18. člena ZDDD, če se pogodba sporazumno razdru, ima davčni zavezanec pravico zahtevati vračilo plačanega davka na darilo. V tem primeru se davek vrne samo, če je bil sporazu...
+
+ID: ZDPN2_scenario_006
+Question: Kupujem rabljeno stanovanje od fizične osebe. Če DDV ni obračunan, kateri davek pride v poštev in kdo ga praviloma plača?
+Answer words: 213
+Retrieved sources: 10
+Top predicted source: ZDDV-1 128. člen
+Gold laws: ZDPN-2
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: Kratek povzetek: DDV se ne obračunava od kupnine rabljenega stanovanja, če ga kupuješ od fizične osebe. V tem primeru pride v poštev carinski davek. Podrobna razlaga: Zakon o davku na dodano vrednost (ZDDV-1) v 48. členu določa, da DDV se ne obračunava od pridobitve blaga znotraj Skupnosti, če so izpolnjeni naslednji pogoji: * pridobitev blaga opra...
+
+ID: ZDPN2_definition_007
+Question: Kaj se po zakonu sploh šteje za promet nepremičnin?
+Answer words: 157
+Retrieved sources: 10
+Top predicted source: ZIZ 262. člen
+Gold laws: ZDPN-2
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: Po zakonu o davku na promet nepremičnin (ZDPN-2) se za promet nepremičnin šteje naslednje: - Odplačni prenos lastninske pravice na nepremičnini (člen 3, odstavek 2) - Zamenjava ene nepremičnine za drugo nepremičnino (člen 3, odstavek 3) - Finančni najem nepremičnine (člen 3, odstavek 3) - Pridobitev lastninske pravice na nepremičnini zaradi priznan...
+
+ID: ZDPN2_edge_008
+Question: Ali se davek na promet nepremičnin plača tudi takrat, ko je bil pri prodaji nepremičnine že obračunan DDV?
+Answer words: 213
+Retrieved sources: 10
+Top predicted source: ZDPN-2 4. člen
+Gold laws: ZDPN-2
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: KRATEK POVZETEK: Davek na promet nepremičnin se plača tudi takrat, ko je bil pri prodaji nepremičnine že obračunan DDV. PODRIBNA RAZLAGA: Na podlagi 4. člena Zakona o davku na promet nepremičnin (ZDPN-2) se za prenos nepremičnin po tem zakonu ne šteje prenos lastninske pravice na nepremičninah, od katerega je bil obračunan davek na dodano vrednost...
+
+ID: ZDPN2_scenario_009
+Question: Prodal sem zemljišče. V kolikšnem času moram vložiti napoved za davek na promet nepremičnin?
+Answer words: 121
+Retrieved sources: 10
+Top predicted source: ZDPN-2 11. člen
+Gold laws: ZDPN-2
+Has uncertainty wording: False
+Mentions legal source: True
+Answer preview: KRATEK POVZETEK: Napoved za davek na promet nepremičnin moraš vložiti v 15 dneh po nastanku davčne obveznosti. PODRIBNA RAZLAGA: Na podlagi konteksta (ZAKON: Zakon o davku na promet nepremičnin (ZDPN-2), ČLEN: 11. člen, BESEDILO: (1)) je jasno določeno, da moraš vložiti napoved za davek na promet nepremičnin v 15 dneh po nastanku davčne obveznosti...
+
+ID: ZDPN2_scenario_010
+Question: Ali lahko notar overi prodajno pogodbo za hišo, če davek na promet nepremičnin še ni poravnan?
+Answer words: 38
+Retrieved sources: 10
+Top predicted source: ZDPN-2 15. člen
+Gold laws: ZDPN-2
+Has uncertainty wording: True
+Mentions legal source: True
+Answer preview: Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti. Zakon o davku na promet nepremičnin (ZDPN-2) ne daje jasne odločilne odločbe, kako se mora notar ukvarjati z overitvijo prodajne pogodbe, če davek na promet nepremičnin še ni poravnal.
+
+=== COMPACT TSV ===
+id	answer_words	num_sources	top_pred_law	top_pred_article	gold_laws	has_uncertainty	has_source_reference
+ZDDD_scenario_001	201	10	ZDO	150. člen	ZDDD	True	True
+ZDDD_scenario_002	144	10	ZDDV-1	51. člen	ZDDD	True	True
+ZDDD_edge_003	125	10	ZDO	149. člen	ZDDD	False	True
+ZDDD_scenario_004	111	10	ZDDD	13. člen	ZDDD	False	True
+ZDDD_edge_005	129	10	ZDDD	18. člen	ZDDD	False	True
+ZDPN2_scenario_006	213	10	ZDDV-1	128. člen	ZDPN-2	False	True
+ZDPN2_definition_007	157	10	ZIZ	262. člen	ZDPN-2	False	True
+ZDPN2_edge_008	213	10	ZDPN-2	4. člen	ZDPN-2	False	True
+ZDPN2_scenario_009	121	10	ZDPN-2	11. člen	ZDPN-2	False	True
+ZDPN2_scenario_010	38	10	ZDPN-2	15. člen	ZDPN-2	True	True
+ZDOH2_scenario_011	169	10	ZDoh-2	11. člen	ZDoh-2	True	True
+ZDOH2_scenario_012	203	10	ZDDPO-2	16. člen	ZDoh-2	False	True
+ZDOH2_definition_013	129	10	ZDoh-2	18. člen	ZDoh-2	False	True
+ZDOH2_edge_014	163	10	ZDDD	8. člen	ZDDD,ZDoh-2	False	True
+ZDOH2_scenario_015	125	10	ZDoh-2	25. člen	ZDoh-2	True	True
+ZDAVP2_definition_016	171	10	ZDavP-2	28. člen	ZDavP-2	False	True
+ZDAVP2_scenario_017	172	10	ZDavP-2	62. člen	ZDavP-2	True	True
+ZDAVP2_scenario_018	124	10	ZDavP-2	54. člen	ZDavP-2	False	True
+ZDAVP2_scenario_019	135	10	ZDavP-2	104. člen	ZDavP-2	True	True
+ZDAVP2_scenario_020	119	10	ZDO	213. člen	ZDavP-2	False	True
+ZDAVP2_edge_021	201	10	ZDavP-2	103. člen	ZDavP-2	True	True
+ZDDV1_scenario_022	184	10	ZDDV-1	94. člen	ZDDV-1	True	True
+ZDDV1_scenario_023	173	10	ZDDV-1	88. člen	ZDDV-1	False	True
+ZDDV1_definition_024	206	10	ZDDV-1	82. člen	ZDDV-1	False	True
+ZDDV1_edge_025	201	10	ZDPN-2	20. člen	ZDDV-1	False	True
+ZTRO1_scenario_026	105	10	ZTro-1	7. člen	ZTro-1	True	True
+ZTRO1_edge_027	204	10	EZ-1	381. člen	ZTro-1	True	True
+ZDDD_unanswerable_028	124	10	ZDDD	13. člen	ZDDD	True	True
+ZDAVP2_unanswerable_029	21	10	ZDavP-2	97. člen	ZDavP-2	True	False
