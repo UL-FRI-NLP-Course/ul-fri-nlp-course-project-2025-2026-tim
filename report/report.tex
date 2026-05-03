@@ -20,6 +20,8 @@
 %----------------------------------------------------------------------------------------
 \documentclass[fleqn,moreauthors,10pt]{ds_report}
 \usepackage[english]{babel}
+\usepackage{titlesec}
+\titlespacing*{\subsection}{0pt}{2.5ex plus 3pt minus 2pt}{0.25em}
 
 \graphicspath{{fig/}}
 
@@ -38,7 +40,7 @@
 %\Archive{Final report} 
 
 % Article title
-\PaperTitle{Domain-Specific LLM Knowledge Injection} 
+\PaperTitle{A RAG-Based Chatbot for Slovenian Tax and Investment Law}
 
 % Authors (student competitors) and their info
 \Authors{Maj Bregar, Jan Tršan, and Edita Džubur}
@@ -77,23 +79,21 @@ This project develops a domain-specific chatbot for Slovenian investment and tax
 %----------------------------------------------------------------------------------------
 
 \section*{Introduction}
-Large language models (LLMs) often lack sufficiently deep domain-specific understanding to provide reliable advice in specialized fields. In domain-specific applications responses must be both accurate and verifiable, enabling users to fact-check the information through clearly provided sources. Without such guarantees, the risks of misleading or unverifiable outputs limit the usability of LLM-based systems in high-stakes domains.
+Large language models (LLMs) often lack sufficiently deep domain-specific knowledge to provide reliable advice in specialized fields. This is especially problematic in legal and financial domains, where answers may depend on specific provisions, exceptions, and recent changes. In such settings, responses should not only be plausible, but also grounded in sources that the user can inspect.
 
-This project focuses on the development of a chatbot designed to provide guidance on Slovenian investment and tax law. The domain is highly specialized and subject to regulatory detail, making it challenging for general-purpose language models to deliver consistently accurate and up-to-date responses. As a result, additional mechanisms for injecting domain-specific knowledge are required.
-
-This report presents the design, implementation, and evaluation of a pipeline for enhancing a general-purpose LLM with domain-specific knowledge. The goal is to enable the chatbot to produce accurate, grounded, and transparent responses suitable for advisory use.
+This project develops a chatbot for Slovenian investment and tax law. Instead of relying only on the model's internal knowledge, the system uses retrieval-augmented generation (RAG) to ground answers in external legal documents. The goal is to provide responses that are understandable, relevant to the user's question, and linked to sources that can be verified.
 
 
 %------------------------------------------------
 \section*{Literature Overview}
 
-Several prominent techniques exist for injecting domain-specific knowledge into large language models, differing in how knowledge is incorporated and maintained, as well as in their suitability for high-stakes domains such as law and finance.
+Several approaches can be used to adapt LLMs to specialized tasks. They differ mainly in whether knowledge is provided through the prompt, learned into the model parameters, or retrieved from external sources at inference time.
 
 A straightforward and widely adopted approach is prompt engineering~\cite{fewshot}, where model behavior is guided through carefully designed instructions, constraints, or examples. Rather than modifying the model itself, knowledge is implicitly introduced at inference time through the prompt. This makes the approach highly flexible and inexpensive, and particularly useful for rapid prototyping, enforcing output structure, or guiding reasoning processes in chatbot systems. However, its reliance on the context window limits how much domain knowledge can be injected, and performance can vary significantly depending on prompt formulation. As a result, prompt engineering alone is often insufficient in domains where correctness and reliability are critical.
 
 In contrast, fine-tuning~\cite{lora} embeds domain knowledge directly into the model’s parameters by training on domain-specific data. This allows the model to internalize terminology, patterns, and expected behaviors, leading to more consistent and specialized outputs. Such properties are beneficial for tasks like document classification or maintaining a specific response style in a chatbot. At the same time, this approach comes with notable drawbacks: it is resource-intensive, depends on the availability of high-quality labeled data, and produces a static representation of knowledge that cannot easily adapt to updates, such as changes in regulations or financial markets. Furthermore, the lack of explicit source attribution limits its applicability in settings where transparency is required.
 
-Retrieval-augmented generation (RAG)~\cite{rag} addresses many of these limitations by combining pretrained model knowledge with external information sources. Instead of relying solely on internal parameters, the model retrieves relevant documents at inference time and conditions its responses on them. This enables access to up-to-date and domain-specific information, reduces hallucinations when retrieval is effective, and supports the inclusion of explicit references. Consequently, RAG is particularly well-suited for legal and financial chatbot systems, where answers must be both accurate and verifiable. The trade-off lies in increased system complexity, as it requires a dedicated retrieval pipeline, and in sensitivity to retrieval quality, which directly impacts response reliability and latency.
+RAG~\cite{rag} addresses many of these limitations by combining pretrained model knowledge with external information sources. Instead of relying solely on internal parameters, the model retrieves relevant documents at inference time and conditions its responses on them. This enables access to up-to-date and domain-specific information, reduces hallucinations when retrieval is effective, and supports the inclusion of explicit references. Consequently, RAG is particularly well-suited for legal and financial chatbot systems, where answers must be both accurate and verifiable. The trade-off lies in increased system complexity, as it requires a dedicated retrieval pipeline, and in sensitivity to retrieval quality, which directly impacts response reliability and latency.
 
 In practice, these methods are rarely used in isolation. Prompt engineering is often employed to structure and constrain outputs, fine-tuning to ensure consistent behavior, and RAG to provide grounded, up-to-date knowledge, resulting in hybrid systems that balance flexibility, accuracy, and transparency.
 
@@ -101,71 +101,43 @@ In practice, these methods are rarely used in isolation. Prompt engineering is o
 
 \section*{Proposed Dataset and Data Sources}
 
-In this project, we focus on developing a domain-specific AI assistant for the Slovenian legal domain, with a particular emphasis on tax and investment legislation (e.g., \textit{ZDoh-2}, \textit{ZDavP-2}). To achieve this, we construct a comprehensive dataset by combining an existing legal corpora with additional publicly available Slovenian legal and linguistic resources.
+The dataset combines Slovenian legal texts with explanatory government sources and linguistic corpora. The main focus is on tax- and investment-related legislation, especially acts such as \textit{ZDoh-2} and \textit{ZDavP-2}.
 
 \subsection*{Core Legal Corpus}
 
-The primary dataset is based on the Slovenian legal corpus provided within the LLM4DH project~\cite{llm4dh}. This corpus contains a large collection of Slovenian legislation, which serves as the main source of truth for the system. It includes structured legal documents such as laws, regulations, and amendments, making it suitable for tasks such as retrieval-augmented generation (RAG), legal question answering, and document grounding.
+The primary dataset is based on the Slovenian legal corpus provided within the LLM4DH project~\cite{llm4dh}. It contains Slovenian legislation in a structured form and provides the core legal material used for retrieval and grounding.
 
 \subsection*{Supplementary Legal Data Sources}
 
-To enhance the coverage and practical applicability of the system, we incorporate additional Slovenian legal resources:
+To improve coverage beyond the core corpus, we also use official Slovenian legal and administrative sources. \textbf{PISRS (Pravno-informacijski sistem RS)}\footnote{\url{https://pisrs.si}} provides structured access to Slovenian legislation, including tax-related acts, while \textbf{Uradni list RS}\footnote{\url{https://www.uradni-list.si}} contains official publications of laws and amendments.
 
-\begin{itemize}
-    \item \textbf{PISRS (Pravno-informacijski sistem RS)}\footnote{\url{https://pisrs.si}}: A centralized repository of Slovenian legislation, providing structured access to laws, including tax-related acts such as ZDoh-2. This source enables article-level segmentation and metadata extraction.
-    
-    \item \textbf{Uradni list RS}\footnote{\url{https://www.uradni-list.si}}: The official gazette of the Republic of Slovenia, containing original publications of laws and amendments. This source is useful for validating legal texts and tracking legislative changes.
-    
-    \item \textbf{FURS (Financial Administration of RS)}\footnote{\url{https://www.fu.gov.si}}: Provides tax-related guidelines, explanations, and frequently asked questions. This resource is particularly relevant for constructing question-answer datasets aligned with real-world tax queries.
-    
-    \item \textbf{e-Uprava}\footnote{\url{https://e-uprava.gov.si}}: A government portal offering simplified explanations of legal procedures and regulations. This source is useful for bridging the gap between formal legal language and user-friendly descriptions.
-\end{itemize}
+For more practical user-facing material, we also include \textbf{FURS (Financial Administration of RS)}\footnote{\url{https://www.fu.gov.si}}, which provides tax guidelines, explanations, and frequently asked questions, and \textbf{e-Uprava}\footnote{\url{https://e-uprava.gov.si}}, which offers simplified explanations of administrative procedures and legal obligations.
 
 \subsection*{CLARIN.SI Legal and Linguistic Corpora}
 
-In addition to legal texts, we incorporate corpora from the CLARIN.SI infrastructure to support linguistic processing and model development.
+We also use resources from the CLARIN.SI infrastructure to support linguistic processing and possible future model evaluation. The \textbf{Slovenian Legal Corpus (CLARIN.SI)}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/2095}} contains Slovenian legal texts with linguistic annotations and metadata. The \textbf{siParl Parliamentary Corpus}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/1300}} contains Slovenian parliamentary debates from 1990 to 2018 and provides broader context for legislative discussions~\cite{siparl}.
 
-\begin{itemize}
-    \item \textbf{Slovenian Legal Corpus (CLARIN.SI)}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/2095}}: This corpus contains Slovenian legal texts annotated with linguistic information and metadata. It is particularly useful for training and evaluating NLP models in the legal domain, as well as for tasks such as named entity recognition and terminology extraction.
-    
-    \item \textbf{siParl Parliamentary Corpus}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/1300}}: A large corpus of Slovenian parliamentary debates covering the period from 1990 to 2018, containing over 200 million words and rich metadata about speakers and sessions. This dataset provides contextual information about legislative discussions and policy development \cite{siparl}.
-\end{itemize}
-
-CLARIN resources are typically provided in structured formats such as XML or CONLL-U and include linguistic annotations (tokenization, lemmatization, part-of-speech tagging), which facilitates downstream NLP tasks and model fine-tuning.
+These resources are useful for terminology analysis, linguistic preprocessing, and potential later experiments beyond the initial RAG pipeline.
 
 \subsection*{Dataset Construction Strategy}
 
-The final dataset will be constructed by combining the above sources into a unified corpus. The main steps include:
+The dataset is constructed by combining authoritative Slovenian legal texts with supporting explanatory sources. The documents are cleaned and converted into a consistent textual format before being passed to the chunking pipeline described below. 
 
-\begin{itemize}
-    \item \textbf{Data cleaning and normalization:} Converting documents from HTML/PDF/XML into a consistent textual format.
-    \item \textbf{Segmentation:} Splitting legal documents into meaningful units (e.g., articles, paragraphs).
-    \item \textbf{Metadata extraction:} Capturing information such as law title, article number, and publication date.
-    \item \textbf{Domain filtering:} Selecting tax- and investment-related legislation (e.g., ZDoh-2).
-    \item \textbf{Alignment with explanatory sources:} Linking legal provisions with interpretations from FURS and e-Uprava.
-\end{itemize}
+The focus is on tax- and investment-related legislation, while sources such as FURS and e-Uprava provide more practical explanations of legal procedures. This gives the system access to both formal legal provisions and user-oriented interpretations.
 
-Overall, the combination of authoritative legal texts, explanatory government resources, and linguistically annotated corpora provides a strong foundation for building a reliable and domain-specific legal AI assistant.
-
-\section{Submission 2 - Initial Solution and Results}
-
-For the second submission we implemented an initial end-to-end baseline of the Slovenian tax and investment law chatbot. The system already covers the main components needed for retrieval-augmented generation: legal-document chunking, embedding, vector storage, neural reranking, prompt construction, local LLM serving, and an interactive command-line client. The implementation is located in the \texttt{chatbot} directory and is organized so that the indexing pipeline can be run separately from the online chatbot.
-
-\subsection{System Architecture}
-
-The baseline follows a modular RAG architecture. First, legal documents are processed offline into structured chunks and embedded into a retrieval store. At runtime, the chatbot embeds the user's question, retrieves candidate chunks from the store, reranks them with a cross-encoder, constructs a grounded prompt, and sends the final message sequence to a locally served instruction-tuned language model.
-
-The chatbot is split into two main runtime processes. The script \texttt{run\_openai\_llm\_server.py} starts a \texttt{vLLM} server with an OpenAI-compatible \texttt{/v1/chat/completions} endpoint. It loads the model configured in \texttt{configs/config.yaml}; in the current configuration this is \texttt{meta-llama/Llama-3.1-8B-Instruct}. The server writes its hostname, port, and model path into \texttt{configs/server\_boot\_config.yaml}. The client script \texttt{run\_chatbot\_client.py} then reads this file, starts \texttt{LawInvestmentChatbot}, loads the RAG components through \texttt{RAGHandler}, and provides an interactive terminal interface.
-
-This separation is useful in the HPC environment because the LLM server can run as a non-interactive GPU job, while the chatbot client can run as a separate interactive job. The model and retrieval settings are centralized in \texttt{ChatbotSettings.py} and \texttt{configs/config.yaml}, which makes it possible to switch embedding models, rerankers, generation parameters, and RAG store paths without changing the main chatbot code.
-
-For ease of development, most of the chatbot orchestration logic currently remains on the client side. The server is used mainly as a reusable OpenAI-compatible generation endpoint, while retrieval, reranking, prompt assembly, chat-history management, and response streaming are handled by the client. This choice makes iteration faster because the LLM server takes a relatively long time to load each time it is started; keeping the experimental logic in the client allows us to modify and test the RAG behavior without repeatedly restarting the model server.
 
 \section*{Methodology}
-Chatbot systems designed for domains such as investing and tax law require a high level of accuracy, reliability, and transparency in their responses. To address these requirements, the proposed approach primarily relies on retrieval-augmented generation (RAG). By integrating external domain-specific documents into the generation process, the system can provide up-to-date and factually grounded answers. Importantly, retrieved documents can be cited as references, allowing users to verify the information, which is essential in high-stakes decision-making contexts.
+
+This section describes the implemented baseline pipeline, from legal document preprocessing to retrieval, reranking, and answer generation.
+
+\subsection*{System Architecture}
+
+The implemented baseline follows a modular RAG architecture with separate offline indexing and online answering stages. The offline stage builds the retrieval store from legal documents, while the online stage retrieves and reranks relevant chunks before generating a grounded answer with a locally served instruction-tuned language model.
+
+The system is split into two main runtime components. The first runs the vLLM server and exposes an OpenAI-compatible endpoint for answer generation. The second acts as the chatbot client, loading the retrieval components, assembling prompts, managing chat history, and providing the interactive terminal interface. This separation is useful in the HPC environment because the LLM server can run as a GPU job, while retrieval, reranking, prompt construction, and chat-history handling remain on the client side.
 
 
-\subsection{Chunking Strategy}
+\subsection*{Chunking Strategy}
 
 The retrieval component of the chatbot is built by converting legal documents into structured text chunks and embedding them into a vector index. The input consists of COLESLAW-style JSONL records, where each record contains metadata such as the law title, identifier, and full legal text.
 
@@ -177,21 +149,31 @@ Each generated chunk contains both the raw chunk text and structured metadata. T
 
 This strategy is designed to balance retrieval precision with legal interpretability. Article and paragraph-level chunks are small enough to support focused retrieval, while the attached metadata preserves the legal source context needed for citation and verification.
 
-\subsection{Chunk Embedding}
+\subsection*{Chunk Embedding}
 
 Chunk embeddings are generated using the multilingual sentence-transformer model \texttt{BAAI/bge-m3}~\cite{bgem3}, which provides strong cross-lingual performance and works well for morphologically rich languages such as Slovenian.
 
 The resulting vectors are normalized by default and stored as a NumPy matrix. A FAISS index is then optionally constructed using inner product search over the normalized embeddings, which corresponds to cosine similarity. The final output directory contains the chunk file, embedding matrix, FAISS index.
 
-\subsection{RAG Pipeline}
+\subsection*{RAG Pipeline}
 
 Upon receiving a user query, the text is embedded using \texttt{BAAI/bge-m3}, and the top 50 most similar chunks are retrieved from the RAG chunk store. These candidates are then reranked using \texttt{BAAI/bge-reranker-large}~\cite{reranker}, with the top 10 most relevant chunks retained. The selected chunks, together with their metadata (e.g., law name, article, paragraph), are used to construct a structured RAG prompt that clearly delineates the legal context and provides explicit instructions for grounded answering.
 
 The RAG prompt, along with the user query, system-level formatting instructions, and conversation history, is sent to a vLLM server running \texttt{Llama-3.1-8B-Instruct}~\cite{llmllama} via the \texttt{OpenAI} API message interface. The prompt enforces strict reliance on the provided legal context, requiring the model to cite relevant laws and articles, avoid hallucinations, and explicitly indicate when the answer cannot be determined from the retrieved sources.
 
-\subsection{Future Pipeline Extensions}
+\subsection*{Evaluation Dataset}
 
-In addition to RAG, prompt engineering will be employed to guide the behavior of the language model. Carefully designed prompts will define the expected response structure, enforce clarity and precision, and introduce guardrails to reduce ambiguous or misleading outputs. This combination ensures that responses are not only grounded in reliable sources but also presented in a consistent and controlled manner.
+We prepared a gold evaluation dataset for Slovenian tax-related question answering. The dataset contains practical user questions based on several Slovenian tax laws, including scenario-based questions, edge cases, definition questions, and a small number of unanswerable questions. The purpose of including different question types is to test not only whether the system can retrieve relevant legal provisions, but also whether it avoids generating unsupported answers when the available context is insufficient.
+
+The evaluation examples were created with the help of several LLMs. We used them to generate possible tax-related questions, suggest answers, and check the answers against the relevant legal sources. This gave us a wider set of examples than we would likely get from writing all questions manually. After that, we manually reviewed the dataset and corrected the answers where needed. In particular, we checked whether each answer was supported by the cited legal text and whether the question represented a realistic use case for a Slovenian tax assistant.
+
+\subsection*{Future Work}
+
+Next, we will run the chatbot on the prepared evaluation set. For each question, we will store the retrieved chunks, the generated answer, and the sources used by the model. We will then compare the answer with the gold answer and check whether the model reached the correct conclusion from the available legal text.
+
+For scoring, we will combine manual review with LLM-based evaluation. A stronger LLM can help flag incomplete, unsupported, or contradictory answers, but the final judgement should still be checked manually, especially for borderline legal cases.
+
+We will also use the evaluation results to adjust the prompt and retrieval settings. In particular, we want to test how many chunks should be retrieved and reranked before generation. This matters because legal answers often depend on short exceptions or conditions that may not appear in the most obvious article.
  
 \bibliographystyle{unsrt}
 \bibliography{report}
