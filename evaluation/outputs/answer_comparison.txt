@@ -1,0 +1,319 @@
+====================================================================================================
+ID: ZDDD_scenario_001
+QUESTION:
+Če mi mama podari stanovanje, ali moram plačati davek na darilo?
+
+GOLD ANSWER:
+Darilo nepremičnine med staršem in otrokom je praviloma oproščeno davka na dediščine in darila, ker gre za obdarjenca prvega dednega reda oziroma z njim izenačenega obdarjenca.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Mama mora plačati davek na darilo, če podari stanovanje. PODRIBNA RAZLAGA: Podatek iz konteksta [8] ZAKON: Zakon o davkih občanov (ZDO) ČLEN: 148. člen BESEDILO: Davek na dediščine in darila se ne plačuje od tistega nepremičnega premoženja, na katerem dedič oziroma obdarjenec po veljavnih predpisih ne more pridobiti lastninske pravice, pravice uporabe ali užitka. Stanovanje je nepremično premoženje, ki ga lahko dedič ali obdarjenec uporablja za stanovanje. V tem primeru pa ni jasno, ali mama mora plačati davek na darilo. Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti. OPOMBA: Vendar je treba upoštevati, da je stanovanje nepremično premoženje, ki ga lahko dedič ali obdarjenec uporablja za stanovanje. V tem primeru pa ni jasno, ali mama mora plačati davek na darilo. Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti. RELEVANTNI PRAVNI VIRI: - [8] ZAKON: Zakon o davkih občanov (ZDO) ČLEN: 148. člen BESEDILO: Davek na dediščine in darila se ne plačuje od tistega nepremičnega premoženja, na katerem dedič oziroma obdarjenec po veljavnih predpisih ne more pridobiti lastninske pravice, pravice uporabe ali užitka. OMEJITVE IN OPOMBE: - Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti. - Treba je preveriti druga zakonska predpisa in strokovnjake za potrditev odgovora.
+
+====================================================================================================
+ID: ZDDD_scenario_002
+QUESTION:
+Če mi brat podari 30.000 EUR, ali sem oproščen davka?
+
+GOLD ANSWER:
+Praviloma ne. Brat spada v II. dedni red, zato darilo ni oproščeno že samo zato, ker gre za sorodnika, ampak je praviloma obdavčeno po stopnjah, ki jih ZDDD določa za II. dedni red. Hkrati tak denarni prejem praviloma spada med darila, ki so predmet obdavčitve po ZDDD.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Oprostitveni pogoji za davčno oprostitev pri darilih so določeni v Zakonu o davku na dediščine in darila (ZDDD). PODRIBNA RAZLAGA: Podatek, da vas brat podari 30.000 EUR, ne dovoljuje neposrednega zaključka, ali ste oproščeni davka. Zato je potrebno preveriti, ali se ta podatek ujema z oprostitvenimi pogoji. OPOMBA: Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti, ali ste oproščeni davka. Za zanesljivo odločitev je potrebno preveriti dodatne podatke ali se obrati na strokovnjaka. RELEVANTNI PRAVNI VIRI: - Zakon o davku na dediščine in darila (ZDDD) - Člen 9. člen ZDDD - Člen 10. člen ZDDD OMEJITVE IN OPOMBE: - Oprostitveni pogoji so določeni v Zakonu o davku na dediščine in darila (ZDDD). - Za zanesljivo odločitev je potrebno preveriti dodatne podatke ali se obrati na strokovnjaka. - Če obstajajo možne izjeme ali posebni pogoji, jih omeni, če so razvidni iz konteksta.
+
+====================================================================================================
+ID: ZDDD_edge_003
+QUESTION:
+Sem kmet in v dar dobim kmetijsko zemljišče. Ali se tudi v tem primeru plača davek na darilo?
+
+GOLD ANSWER:
+Če se po zakonu šteješ za kmeta in dobiš v dar kmetijsko zemljišče, ZDDD praviloma določa oprostitev davka. Enako velja tudi za gozdna zemljišča, ki se za ta namen štejejo za kmetijska zemljišča. Vendar pa se lahko davek naknadno odmeri, če tako podedovano ali podarjeno nepremičnino odtujiš pred potekom petih let ali se v tem roku prenehaš ukvarjati s kmetijsko dejavnostjo oziroma zemljišč ne obdeluješ skladno z zakonom.
+
+MODEL ANSWER:
+**Kratek povzetek:** V primeru, ko kmet dobiva v dar kmetijsko zemljišče, se davek na darilo ne plača. **Podrobna razlaga:** Zakon o davkih občanov (ZDO) in Zakon o davku na dediščine in darila (ZDDD) določata pravila za plačilo davka na darilo. V 149. členu ZDO in 10. členu ZDDD je navedeno, da davka na dediščine in darila ne plača dedič ali obdarjenec, ki se po določbah zakona o kmetijskih zemljiščih šteje za kmeta, če podeduje oziroma dobi v dar kmetijsko zemljišče. **Relevantni pravni viri:** * Zakon o davkih občanov (ZDO), 149. člen * Zakon o davku na dediščine in darila (ZDDD), 10. člen **Omejitve ali opozorila:** Pogoji za izpolnitev teh določb so natančno določeni v zakonu in zato je treba paziti, da so vsi pogoji izpolnjeni.
+
+====================================================================================================
+ID: ZDDD_scenario_004
+QUESTION:
+V kakšnem roku moram prijaviti darilo, če dobim v dar nepremičnino?
+
+GOLD ANSWER:
+Če prejmeš v dar premoženje, od katerega se plača davek, moraš prejem darila napovedati v 15 dneh od nastanka davčne obveznosti. Če gre za nepremičnino, se napoved vloži pri davčnem uradu, kjer nepremičnina leži.
+
+MODEL ANSWER:
+Kratek povzetek: Darilo, ki obsega nepremičnino, mora biti prijavljeno pri davčnem uradu, kjer nepremičnina leži, v roku 15 dni od nastanka davčne obveznosti. Podrobna razlaga: Na podlagi člena 13. Zakona o davku na dediščine in darila (ZDDD) je prijava darila, ki obsega nepremičnino, dolžnost davčnega zavezanca. Če prejemete v dar nepremičnino, morate jo napovedati pri davčnem uradu, kjer leži, v roku 15 dni od nastanka davčne obveznosti. Relevantni pravni viri: - Zakon o davku na dediščine in darila (ZDDD), člen 13. Omejitve ali opozorila: - Prijava darila mora biti narejena v roku 15 dni od nastanka davčne obveznosti. - Davčni urad lahko zahteva dodatne informacije ali dokumente za potrditev prijave darila.
+
+====================================================================================================
+ID: ZDDD_edge_005
+QUESTION:
+Plačal sem davek na darilo, potem pa sva pogodbo sporazumno razdrla. Ali lahko zahtevam vračilo?
+
+GOLD ANSWER:
+Da, če se pogodba, ki je podlaga za prenos premoženja, sporazumno razdre ali jo sodišče razglasi za neveljavno, lahko zahtevaš odpravo odmere in vračilo že plačanega davka. Pri nepremičnini se davek vrne le, če je bila pogodba razdrta pred prenosom nepremičnine.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Da lahko zahtevate vračilo plačanega davka na darilo, morate se ujemati z določbami zakona o davku na dediščine in darila (ZDDD). PODRIBNA RAZLAGA: Na podlagi 18. člena ZDDD, če se pogodba sporazumno razdru, ima davčni zavezanec pravico zahtevati vračilo plačanega davka na darilo. V tem primeru se davek vrne samo, če je bil sporazumno razdrta preden je bil opravljen prenos premoženja. RELEVANTNI PRAVNI VIRI: - Zakon o davku na dediščine in darila (ZDDD), 18. člen OMEJITVE OPOZORILA: - Vračilo plačanega davka je mogoče zahtevati samo v primeru, da je bila pogodba sporazumno razdrta. - Vračilo se vrne samo, če je bil sporazumno razdrta preden je bil opravljen prenos premoženja. OPOMBA: Predlagam, da preverite podrobnosti vašega primera s strani Finančne uprave Republike Slovenije ali strokovnjaka za davčno zakonodajo.
+
+====================================================================================================
+ID: ZDPN2_scenario_006
+QUESTION:
+Kupujem rabljeno stanovanje od fizične osebe. Če DDV ni obračunan, kateri davek pride v poštev in kdo ga praviloma plača?
+
+GOLD ANSWER:
+Če od prenosa nepremičnine ni bil obračunan DDV, pride praviloma v poštev davek na promet nepremičnin po stopnji 2 % od davčne osnove. Zavezanec je praviloma prodajalec, kupec pa je stranka v postopku, če pogodbeno prevzame obveznost plačila davka.
+
+MODEL ANSWER:
+Kratek povzetek: DDV se ne obračunava od kupnine rabljenega stanovanja, če ga kupuješ od fizične osebe. V tem primeru pride v poštev carinski davek. Podrobna razlaga: Zakon o davku na dodano vrednost (ZDDV-1) v 48. členu določa, da DDV se ne obračunava od pridobitve blaga znotraj Skupnosti, če so izpolnjeni naslednji pogoji: * pridobitev blaga opravi davčni zavezanec, ki nima sedeža v Sloveniji, * pridobitev blaga je opravljena za namene nadaljnje dobave tega blaga, * blago, ki ga davčni zavezanec tako pridobi, se neposredno odpošlje ali odpelje iz druge države članice, * prejemnik nadaljnje dobave blaga je davčni zavezanec ali pravna oseba, ki ni davčni zavezanec, vendar je identificirana za DDV v Sloveniji, * od nadaljnje dobave blaga, ki jo na ozemlju Slovenije opravi davčni zavezanec iz točke a), mora plačati DDV prejemnik blaga. V vašem primeru ste kupovali rabljeno stanovanje od fizične osebe, kar pomeni, da so izpolnjeni vsi pogoji iz 48. člena ZDDV-1 in DDV se ne obračunava. Carinski davek: Carinski davek se obračunava in plačuje od uvoza rabljenega stanovanja. Carinski davek se obračunava na podlagi tržne vrednosti stanovanja in se plačuje na bančni račun, ki ga določi carinski organ. Kdo plača carinski davek: Carinski davek plača carinski dolžnik, ki je določen v skladu s carinskimi predpisi. V vašem primeru bo
+
+====================================================================================================
+ID: ZDPN2_definition_007
+QUESTION:
+Kaj se po zakonu sploh šteje za promet nepremičnin?
+
+GOLD ANSWER:
+Za promet nepremičnin se šteje vsak odplačni prenos lastninske pravice na nepremičnini. Zakon med primere izrecno vključuje tudi zamenjavo nepremičnin in nekatere druge odplačne prenose stvarnih pravic.
+
+MODEL ANSWER:
+Po zakonu o davku na promet nepremičnin (ZDPN-2) se za promet nepremičnin šteje naslednje: - Odplačni prenos lastninske pravice na nepremičnini (člen 3, odstavek 2) - Zamenjava ene nepremičnine za drugo nepremičnino (člen 3, odstavek 3) - Finančni najem nepremičnine (člen 3, odstavek 3) - Pridobitev lastninske pravice na nepremičnini zaradi priznanja lastninske oziroma solastninske pravice, kot posledice gradnje čez mejo nepremičnine (člen 3, odstavek 3) - Pridobitev lastninske pravice na nepremičnini zaradi priznanja lastninske oziroma solastninske pravice, kot posledice povečanja vrednosti nepremičnine (člen 3, odstavek 3) - Pridobitev lastninske pravice na nepremičnini ob razdelitvi solastnine (člen 3, odstavek 3) - Pridobitev lastninske pravice na nepremičnini, ki je nastala na podlagi priposestvovanja, če ob sklenitvi prvotnega pravnega posla, ki je bil podlaga za dobroverno lastniško posest, davek še ni bil plačan (člen 3, odstavek 4) Tako se po zakonu šteje tudi pridobitev lastninske pravice na nepremičnini po sklenitvi prvotnega pravnega posla, če davek še ni bil plačan.
+
+====================================================================================================
+ID: ZDPN2_edge_008
+QUESTION:
+Ali se davek na promet nepremičnin plača tudi takrat, ko je bil pri prodaji nepremičnine že obračunan DDV?
+
+GOLD ANSWER:
+Ne. Če je bil od prenosa nepremičnine ali od ustanovitve oziroma prenosa stavbne pravice že obračunan DDV, se davek na promet nepremičnin ne plača.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Davek na promet nepremičnin se plača tudi takrat, ko je bil pri prodaji nepremičnine že obračunan DDV. PODRIBNA RAZLAGA: Na podlagi 4. člena Zakona o davku na promet nepremičnin (ZDPN-2) se za prenos nepremičnin po tem zakonu ne šteje prenos lastninske pravice na nepremičninah, od katerega je bil obračunan davek na dodano vrednost (DDV). Toda, kot je navedeno v 20. členu ZDPN-2, se prenos nepremičnine obdavči v skladu z dosedanjimi predpisi, ko pride do dejanskega prenosa lastninske pravice na nepremičnini, če je bila pogodba o finančnem najemu sklenjena pred 1. januarjem 2007 in od katerega ob sklenitvi pogodbe ni bil obračunan davek na dodano vrednost ali davek na promet nepremičnin. To pomeni, da če je bila pri prodaji nepremičnine obračunan DDV, se davek na promet nepremičnin še vedno plača, ker se za prenos nepremičnine ne šteje prenos lastninske pravice na nepremičninah, od katerega je bil obračunan DDV. RELEVANTNI PRAVNI VIRI: - Zakon o davku na promet nepremičnin (ZDPN-2), 4. člen - Zakon o davku na promet nepremičnin (ZDPN-2), 20. člen OMEJITVE IN OPOMBE: - To odgovor temelji samo na podanih informacijah in kontekstu. - Za potrditev tega odgovora je treba pregledati celoten zakon in njegove člene. - V primeru dvoma ali spornih primerov je treba obratiti se strokovnjaku ali uradnim virom.
+
+====================================================================================================
+ID: ZDPN2_scenario_009
+QUESTION:
+Prodal sem zemljišče. V kolikšnem času moram vložiti napoved za davek na promet nepremičnin?
+
+GOLD ANSWER:
+Napoved za davek na promet nepremičnin mora davčni zavezanec vložiti v 15 dneh po nastanku davčne obveznosti pri davčnem organu, na območju katerega nepremičnina leži.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Napoved za davek na promet nepremičnin moraš vložiti v 15 dneh po nastanku davčne obveznosti. PODRIBNA RAZLAGA: Na podlagi konteksta (ZAKON: Zakon o davku na promet nepremičnin (ZDPN-2), ČLEN: 11. člen, BESEDILO: (1)) je jasno določeno, da moraš vložiti napoved za davek na promet nepremičnin v 15 dneh po nastanku davčne obveznosti pri davčnem organu, na območju katerega zemljišče leži. RELEVANTNI PRAVNI VIRI: - ZAKON: Zakon o davku na promet nepremičnin (ZDPN-2), ČLEN: 11. člen, BESEDILO: (1) OMEJITVE OPOZORILA: - Vložite napoved v 15 dneh po prodaji zemljišča. - Napoved mora biti vložena pri davčnem organu, na območju katerega zemljišče leži. OPOMBA: - Če ne vložite napoved v ustrezen čas, lahko to povzroči kazenske sankcije ali dodatne davčne obveznosti.
+
+====================================================================================================
+ID: ZDPN2_scenario_010
+QUESTION:
+Ali lahko notar overi prodajno pogodbo za hišo, če davek na promet nepremičnin še ni poravnan?
+
+GOLD ANSWER:
+Praviloma ne. Brez dokaza, da je davek na promet nepremičnin plačan oziroma da se po zakonu ne obračuna, ni mogoče overiti podpisov na pogodbi o prenosu lastninske pravice na nepremičnini.
+
+MODEL ANSWER:
+Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti. Zakon o davku na promet nepremičnin (ZDPN-2) ne daje jasne odločilne odločbe, kako se mora notar ukvarjati z overitvijo prodajne pogodbe, če davek na promet nepremičnin še ni poravnal.
+
+====================================================================================================
+ID: ZDOH2_scenario_011
+QUESTION:
+Živim v Sloveniji in sem davčni rezident, del plače pa zaslužim v tujini. Ali se me slovenska dohodnina še vedno tiče?
+
+GOLD ANSWER:
+Da. Če si rezident Slovenije, si praviloma zavezan za dohodnino od vseh dohodkov, ki imajo vir v Sloveniji, in tudi od dohodkov, ki imajo vir izven Slovenije.
+
+MODEL ANSWER:
+**Kratek povzetek:** Da, slovenska dohodnina se tiče tudi tebe, če si davčni rezident Slovenije in zaslužiš del plače v tujini. **Podrobna razlaga:** Zakon o dohodnini (ZDoh-2) določa, da rezident Slovenije je zavezan za plačilo dohodnine od vseh dohodkov, ki imajo vir v Sloveniji (člen 5. ZDoh-2). Dohodek, ki ga pridobi rezident z opravljanjem dejavnosti v tujini, ima vir v Sloveniji (člen 11. ZDoh-2). To pomeni, da se tiče tudi tvoj dohodek iz dela plače, ki ga zaslužiš v tujini. **Relevantni pravni viri:** * Zakon o dohodnini (ZDoh-2), člen 5. * Zakon o dohodnini (ZDoh-2), člen 11. **Omejitve ali opozorila:** Obveznost davčnega odtegljaja se lahko upošteva samo, če je Slovenija s tujino državo sklenila mednarodno pogodbo o izogibanju dvojnemu obdavčevanju dohodka (člen 110. ZDoh-2). V primeru, da takšne pogodbe ne obstaja, lahko dohodek iz dela plače v tujini ne bi bil obdavčen v Sloveniji. **Poročilo:** Na podlagi podanega konteksta je zanesljivo določeno, da se slovenska dohodnina tiče tudi tebe, če si davčni rezident Slovenije in zaslužiš del plače v tujini.
+
+====================================================================================================
+ID: ZDOH2_scenario_012
+QUESTION:
+Sem nerezident, v Sloveniji pa oddajam stanovanje. Ali je tak dohodek sploh lahko obdavčen v Sloveniji?
+
+GOLD ANSWER:
+Da. Nerezident je praviloma zavezan za dohodnino od dohodkov, ki imajo vir v Sloveniji. Dohodek od nepremičnine, ki je v Sloveniji, ima vir v Sloveniji.
+
+MODEL ANSWER:
+Kratek povzetek: Dohodek iz oddajanja stanovanja kot nerezidenta v Sloveniji lahko ni obdavčen, če se upošteva mednarodna pogodba in določbe zakona o dohodnini (ZDoh-2). Podrobna razlaga: Na podlagi konteksta [6] Zakon o davkih občanov (ZDO), 134. člen, osnova za davek od dohodkov iz premoženja od dohodkov, ki jih lastnik doseže z oddajanjem stanovanjskih ali poslovnih prostorov v najem, je znesek stanarine oziroma najemnine, prejet v letu, za katero se odmerja davek, zmanjšan za stroške vzdrževanja in upravljanja in za enoletno amortizacijo ter za stroške obratovanja, če te stroške plačuje lastnik sam. Vendar pa na podlagi konteksta [8] Zakon o dohodnini (ZDoh-2), 110. člen, dohodek rezidenta, od katerega se skladno z določbami mednarodne pogodbe v Sloveniji ne plačuje dohodnine, se upošteva pri izračunu višine dohodnine od preostalega obdavčljivega dohodka takega rezidenta, če je tako določeno z mednarodno pogodbo. Tako lahko dohodek iz oddajanja stanovanja kot nerezidenta v Sloveniji lahko ni obdavčen, če se upošteva mednarodna pogodba in določbe zakona o dohodnini (ZDoh-2). Relevantni pravni viri: - Zakon o davkih občanov (ZDO), 134. člen - Zakon o dohodnini (ZDoh-2), 110. člen Omejitve ali opozorila: - Za potrditev tega odgovora je potrebno preveriti mednarodno pogodbo in določbe zakona o dohodnini (ZDoh-2). - Lahko obstajajo posebni pogoji
+
+====================================================================================================
+ID: ZDOH2_definition_013
+QUESTION:
+Katere glavne vrste dohodkov pozna ZDoh-2?
+
+GOLD ANSWER:
+ZDoh-2 med dohodke uvršča dohodek iz zaposlitve, dohodek iz dejavnosti, dohodek iz osnovne kmetijske in osnovne gozdarske dejavnosti, dohodek iz oddajanja premoženja v najem in iz prenosa premoženjske pravice, dohodek iz kapitala ter druge dohodke.
+
+MODEL ANSWER:
+Kratek povzetek: ZDoh-2 pozna šest glavnih vrst dohodkov. Podrobna razlaga: ZDoh-2 določa naslednje šest glavnih vrst dohodkov: 1. Dohodek iz zaposlitve (člen 36) 2. Dohodek iz dejavnosti (člen 46) 3. Dohodek iz osnovne kmetijske in osnovne gozdarske dejavnosti (člen 70) 4. Dohodek iz oddajanja premoženja v najem in iz prenosa premoženjske pravice (člen 74) 5. Dohodek iz kapitala (člen 80) 6. Drugi dohodki (člen 105) Relevantni pravni viri: - Zakon o dohodnini (ZDoh-2), člen 18 - Zakon o dohodnini (ZDoh-2), člen 36 - Zakon o dohodnini (ZDoh-2), člen 46 - Zakon o dohodnini (ZDoh-2), člen 70 - Zakon o dohodnini (ZDoh-2), člen 74 - Zakon o dohodnini (ZDoh-2), člen 80 - Zakon o dohodnini (ZDoh-2), člen 105 Omejitve ali opozorila: Ni posebnih omejitev ali opozoril za te vrste dohodkov.
+
+====================================================================================================
+ID: ZDOH2_edge_014
+QUESTION:
+Ali je darilo od stare mame obdavčeno z dohodnino?
+
+GOLD ANSWER:
+Darila, prejeta od fizične osebe, se po ZDoh-2 praviloma ne štejejo za dohodke po tem zakonu. To pa še ne pomeni, da nikoli ni druge davčne obveznosti, saj se lahko uporabi poseben zakon o davku na dediščine in darila.
+
+MODEL ANSWER:
+Kratek povzetek: Darilo od stare mame ni obdavčeno z dohodnino. Podrobna razlaga: Na podlagi člena 22. Zakona o dohodnini (ZDoh-2) se dohodnine ne plačajo od preživnin, ki jih prejme fizična oseba na podlagi sodne odločbe, sporazuma ali dogovora o preživljanju. Tudi nagrade in povračila stroškov skrbniku v skladu z zakonom, ki ureja zakonsko zvezo in družinska razmerja, niso obdavčene z dohodnino. V tem primeru je darilo od stare mame lahko obdavčeno z davkom na dediščine in darila (ZDDD), saj je to pravna podlaga za davčno obveznost. Vendar mora biti preverjeno, ali je darilo izredno zahtevano za nepridobitne namene, kot je navedeno v členu 11. Zakona o davku na dediščine in darila (ZDDD). Relevantni pravni viri: - Zakon o dohodnini (ZDoh-2), člen 22. - Zakon o davku na dediščine in darila (ZDDD), člen 11. Omejitve ali opozorila: - Preverite, ali je darilo izredno zahtevano za nepridobitne namene. - Preverite, ali obstajajo kakršne koli izjeme ali posebni pogoji, ki bi lahko vplivali na davčno obveznost.
+
+====================================================================================================
+ID: ZDOH2_scenario_015
+QUESTION:
+Sem redni študent in prejemam štipendijo iz javnih sredstev. Ali moram od nje plačati dohodnino?
+
+GOLD ANSWER:
+Praviloma ne. ZDoh-2 določa, da so štipendije in nekateri drugi prejemki za osebo, ki je vpisana kot učenec, dijak ali študent za polni učni oziroma študijski čas, oproščeni dohodnine pod pogoji iz zakona.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Na podlagi podanega konteksta lahko zaključimo, da moraš od štipendije plačati dohodnino. PODRIBNA RAZLAGA: Štipendija iz javnih sredstev se vključuje v davčno osnovo in se mora upoštevati pri uveljavljanju pravic iz javnih sredstev (ZUPJS, 12. člen). Tudi Zakon o dohodnini (ZDoh-2) določa, da se štipendija, ki presega znesek, določen v prvem odstavku 106. člena, vsťete v davčno osnovo v višini, ki presega znesek, določen v prvem odstavku 106. člena (ZDoh-2, 106. člen). RELEVANTNI PRAVNI VIRI: - Zakon o uveljavljanju pravic iz javnih sredstev (ZUPJS), 12. člen - Zakon o dohodnini (ZDoh-2), 106. člen OMEJITVE OPOZORILA: - Če obstajajo posebni pogoji ali izjeme, ki bi ti omogočili izjeme od plačila dohodnine, moraš preveriti zakone in določbe, ki so relevantne za tvoje situacijo. NAJPREJPOREŽENI ŠTUDENTI:
+
+====================================================================================================
+ID: ZDAVP2_definition_016
+QUESTION:
+Kaj pomeni, da so moji podatki pri FURS davčna tajnost?
+
+GOLD ANSWER:
+To pomeni, da mora davčni organ kot zaupne varovati podatke, ki jih zavezanec posreduje v davčnem postopku, ter druge podatke v zvezi z njegovo davčno obveznostjo, razen v primerih, ki jih določa zakon.
+
+MODEL ANSWER:
+**Kratek povzetek:** Podatki, ki so davčna tajnost, so podatki, ki so zaščiteni z zakonom in se ne smejo razkriti brez posebnega dovoljenja. V primeru FURS-ja (Finančna uprava Republike Slovenije) pomeni to, da so vaši podatki varovani in ne smejo biti razkriti brez vašega soglasja. **Podrobna razlaga:** Davčna tajnost je po Zakonu o davčnem postopku (ZDavP-2) definirana kot podatki o posameznem zavezancu za davek, ki so potrebni za izvajanje davčne izvršbe. To vključuje podatke o vašem imenu, priimku, naslovu, davčni številki itd. Ko FURS označuje vaše podatke kot davčno tajnost, pomeni to, da so vaši podatki varovani in ne smejo biti razkriti brez vašega soglasja. FURS mora upoštevati zakonske določbe o varstvu osebnih podatkov in davčne tajnosti. **Relevantni pravni viri:** - Zakon o davčnem postopku (ZDavP-2), člen 28 - Zakon o finančni upravi (ZFU), člen 77 **Omejitve ali opozorila:** Vaši podatki so varovani in ne smejo biti razkriti brez vašega soglasja. Če ste zainteresirani za dostop do vaših podatkov ali za njihovo razkritje, morate se obriniti na FURS in zahtevati posebno dovoljenje.
+
+====================================================================================================
+ID: ZDAVP2_scenario_017
+QUESTION:
+Pozabil sem oddati davčno napoved. Ali jo lahko še vedno vložim sam, preden me FURS pozove?
+
+GOLD ANSWER:
+Da, po ZDavP-2 lahko davčni zavezanec vloži novo davčno napoved na podlagi samoprijave, vendar najpozneje do izdaje odmerne odločbe oziroma do začetka davčnega inšpekcijskega, prekrškovnega ali kazenskega postopka.
+
+MODEL ANSWER:
+KONTEKST: ZAKON: Zakon o davčnem postopku (ZDavP-2) ČLEN: 63. člen (1) Ne glede na določbe tega zakona lahko davčni zavezanec, ki ni vložil napovedi oziroma podatki v napovedi niso bili pravilni ali popolni ali resnični, po tem zakonu oziroma zakonu o obdavčenju, vsak trenutek predloži novo davčno napoved, vendar najpozneje do izdaje odmerne odločbe, oziroma do vročitve sklepa o začetku davčnega inšpekcijskega nadzora, oziroma do začetka postopka o prekršku oziroma kazenskega postopka. [3] ZAKON: Zakon o spremembah in dopolnitvah Zakona o davčnem postopku (ZDavP-2L) ČLEN: 9. člen (1) Davčni zavezanec lahko najpozneje do vročitve odmerne odločbe oziroma do začetka davčnega inšpekcijskega nadzora oziroma do začetka postopka o prekršku oziroma kazenskega postopka vloži davčno napoved na podlagi samoprijave v primeru zamude roka za vložitev davčne napovedi. ODGOVOR: Na podlagi podanega konteksta lahko še vedno vložiš davčno napoved sam, preden te FURS pozove. Čeprav je treba pozornost posvetovati na možnost poziva FURS-a, lahko vložiš napoved na podlagi samoprijave, kot je določeno v 9. členu Zakona o spremembah in dopolnitvah Zakona o davčnem postopku (ZDavP-2L).
+
+====================================================================================================
+ID: ZDAVP2_scenario_018
+QUESTION:
+Po oddaji davčnega obračuna sem ugotovil, da sem prijavil previsoko obveznost. Ali lahko to popravim?
+
+GOLD ANSWER:
+Da. Če naknadno ugotoviš, da si v predloženem davčnem obračunu izkazal previsoko davčno obveznost, lahko praviloma vložiš popravek obračuna najpozneje v 12 mesecih od poteka roka za predložitev tega obračuna.
+
+MODEL ANSWER:
+**Kratek povzetek:** Da, lahko popravite previsoko prijavljeno obveznost, vendar morate to storiti v skladu z zakonom. **Podrobna razlaga:** Po Zakonu o davčnem postopku (ZDavP-2) lahko davčni zavezanec popravi davčni obračun, če ugotovi, da je prijavil previsoko obveznost. To lahko storite v roku 12 mesecev od poteka roka za predložitev obračuna (Člen 54. Zakona o davčnem postopku). **Relevantni pravni viri:** - Zakon o davčnem postopku (ZDavP-2), Člen 54. **Omejitve ali opozorila:** - Popravitev mora biti storjena v roku 12 mesecev od poteka roka za predložitev obračuna. - Davčni zavezanec mora priložiti obrazložitev o razlogih, zaradi katerih je prijavil previsoko obveznost. **Napovezava:** V primeru, da ste že predložili popravek obračuna, lahko davčni organ preveri utemeljenost popravka v davčnem inšpekcijskem nadzoru (Člen 54. Zakona o davčnem postopku).
+
+====================================================================================================
+ID: ZDAVP2_scenario_019
+QUESTION:
+Davek sem plačal prepozno. Ali mi FURS lahko zaračuna obresti?
+
+GOLD ANSWER:
+Da. Od davkov, ki niso plačani v predpisanem roku, se plačajo zamudne obresti po 0,0274-odstotni dnevni obrestni meri. Vendar jih davčni organ praviloma ne zaračuna, dokler znesek obresti ne preseže 10 eurov.
+
+MODEL ANSWER:
+KRATEK POVZETEK: FURS lahko zaračuna obresti za prepozno plačani davek, če je bilo plačilo prepozno v skladu s predpisi. PODRIBNA RAZLAGA: Na podlagi podanega konteksta se lahko sklicuje na 30. člen Zakona o interventnih ukrepih za pomoč gospodarstvu in turizmu pri omilitvi posledic epidemije COVID-19 (ZIUPGT). Ta člen določa, da se zakonske zamudne obresti obračunajo po Zakonu o predpisani obrestni meri zamudnih obresti (ZPOMZO-1), če je bilo plačilo prepozno. RELEVANTNI PRAVNI VIRI: - Zakon o interventnih ukrepih za pomoč gospodarstvu in turizmu pri omilitvi posledic epidemije COVID-19 (ZIUPGT), 30. člen - Zakon o predpisani obrestni meri zamudnih obresti (ZPOMZO-1) OMEJITVE IN OPOMBE: Odgovor ni zanesljiv, če ni jasno, ali je bilo plačilo prepozno v skladu s predpisi. Predlagam, da se preverite, ali so bili vsi predpisi izpolnjeni in če so bili vsi potrebni dokumenti podani.
+
+====================================================================================================
+ID: ZDAVP2_scenario_020
+QUESTION:
+Na davčnem kontu imam preplačilo. Kdaj se mi mora denar vrniti?
+
+GOLD ANSWER:
+Če je z odločbo ali obračunom ugotovljeno preplačilo davka, ki presega 10 eurov, se praviloma vrne po uradni dolžnosti v 30 dneh od vročitve odločbe oziroma od dneva predložitve davčnega obračuna.
+
+MODEL ANSWER:
+Kratek povzetek: Preplačilo se mora vrniti v roku 30 dni od dneva vročitve odločbe o preplačilu ali od dneva predložitve davčnega obračuna. Podrobna razlaga: Zakon o davčnem postopku (ZDavP-2) določa, da preplačilo se vrne v roku 30 dni od dneva vročitve odločbe o preplačilu ali od dneva predložitve davčnega obračuna. To velja za preplačila, ki presega 10 eurov. Če je preplačilo manj kot 10 eurov, se mora zahtevati na podlagi davčnega obračuna. Relevantni pravni viri: - Zakon o davčnem postopku (ZDavP-2), 97. člen - Zakon o spremembah in dopolnitvah Zakona o davčnem postopku (ZDavP-2L), 15. člen Omejitve ali opozorila: Preplačilo se mora vrniti v roku 30 dni, drugače se šteje v naslednja plačila ali v plačila druge vrste davkov.
+
+====================================================================================================
+ID: ZDAVP2_edge_021
+QUESTION:
+Sem fizična oseba in zaradi finančne stiske davka ne morem plačati naenkrat. Ali lahko zaprosim za obroke ali odlog?
+
+GOLD ANSWER:
+Da. Davčni organ lahko fizični osebi dovoli odpis, delni odpis, odlog plačila davka za čas do dveh let oziroma plačilo v največ 24 mesečnih obrokih, če bi plačilo ogrozilo preživljanje zavezanca in njegovih družinskih članov. Vendar ta ureditev ne velja za samostojne podjetnike in druge osebe, ki samostojno opravljajo dejavnost, kadar gre za davke, povezane z opravljanjem njihove dejavnosti.
+
+MODEL ANSWER:
+**Kratek povzetek:** Na podlagi podanega konteksta lahko zaprosiš za obroke ali odlog plačila davka, če si fizična oseba in zaradi finančne stiske davka ne moreš plačati naenkrat. **Podrobnejša razlaga:** V 101. členu Zakona o davčnem postopku (ZDavP-2) je določeno, da davčni organ lahko dovoli odpis, delni odpis in odlog plačila davka za čas do dveh let oziroma dovoli plačilo davka v največ 24 mesečnih obrokih v obdobju 24 mesecev, če bi se s plačilom davčne obveznosti lahko ogrozilo preživljanje davčnega zavezanca in njegovih družinskih članov. V 103. členu Zakona o davčnem postopku (ZDavP-2) je določeno, da davčni organ lahko dovoli plačilo davka v največ 12 mesečnih obrokih ali dovoli odlog za največ 12 mesecev, če davčni zavezanec predloži kateri koli instrument zavarovanja iz 117. člena tega zakona ali dovoli vknjižbo zastavne pravice v ustrezen register. **Relevantni pravni viri:** * Zakon o davčnem postopku (ZDavP-2), člen 101 * Zakon o davčnem postopku (ZDavP-2), člen 103 **Omejitve ali opozorila:** Določbe tega člena se ne uporabljajo za davek na dodano vrednost, obračunan v davčnem obračunu, akontacije davkov in davčni odtegljaj. **Predlagani koraki:** Da bi zaprosil za obroke ali odlog plačila davka, moraš: 1. Predložiti dokumente, ki dokazujejo finančno stisko in ogroženost preživljanja. 2. Predložiti
+
+====================================================================================================
+ID: ZDDV1_scenario_022
+QUESTION:
+Sem nov s.p. in v zadnjih 12 mesecih nisem imel niti 25.000 EUR prometa. Ali moram obračunavati DDV?
+
+GOLD ANSWER:
+Praviloma ne. Če v zadnjih 12 mesecih nisi presegel in tudi ni verjetno, da boš presegel 25.000 eurov obdavčljivega prometa, si oproščen obračunavanja DDV. Za takšnega malega davčnega zavezanca tudi ne velja splošna obveznost zahtevati DDV identifikacije po prvem odstavku 78. člena.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti, ali moraš obračunavati DDV. Člen 94. Zakona o davku na dodano vrednost (ZDDV-1) določa, da davčni zavezanec, ki v obdobju zadnjih 12 mesecev ni presegel oziroma ni verjetno, da bo presegel znesek 25.000 eurov obdavčljivega prometa, je oproščen obračunavanja DDV. PODRIBNA RAZLAGA: Člen 94. ZDDV-1 določa dve izjemi iz obveznosti obračunavanja DDV: davčni zavezanec, ki v zadnjih 12 mesecih ni presegel 25.000 EUR obdavčljivega prometa, in davčni zavezanec, ki opravuje osnovno kmetijsko ali osnovno gozdarsko dejavnost in dohodek ne presega 7.500 EUR. Relevantni zakon in člen: ZAKON: Zakon o davku na dodano vrednost (ZDDV-1) ČLEN: 94. člen OMEJITVE IN OPOMBE: - Da bi se uveljavil oprostitev obračunavanja DDV, moraš dokazati, da si v zadnjih 12 mesecih presegel manj kot 25.000 EUR obdavčljivega prometa. - Če si začel opravljati dejavnost šele v zadnjih 12 mesecih, lahko uporabiš posebno ureditev po plačani realizaciji. - Če si dvomljiv o svoji sposobnosti preseči znesek 25.000 EUR obdavčljivega prometa, lahko zahtevajoš davčnemu uradu za potrditev. OPRIMOČILO: - Predložiš zahtevek za izdajo identifikacijske številke za DDV. - Predložiš obra
+
+====================================================================================================
+ID: ZDDV1_scenario_023
+QUESTION:
+Do kdaj moram oddati obračun DDV in plačati DDV za posamezno obdobje?
+
+GOLD ANSWER:
+Obračun DDV mora davčni zavezanec predložiti davčnemu organu do zadnjega delovnega dne naslednjega meseca po poteku davčnega obdobja. Do istega roka mora praviloma tudi plačati DDV v državni proračun.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Obračun DDV mora biti oddan do zadnjega delovnega dne naslednjega meseca po poteku davčnega obdobja, v katerem je nastala davčna obveznost. DDV mora biti plačan v istem času. PODRIBNA RAZLAGA: Na podlagi 88. člena Zakona o davku na dodano vrednost (ZDDV-1) mora davčni zavezanec predložiti obračun DDV do zadnjega delovnega dne naslednjega meseca po poteku davčnega obdobja, v katerem je nastala davčna obveznost. To velja tudi za posamezno obdobje. Zakon določa, da obračun mora biti predložen ne glede na to, ali je za davčno obdobje, za katero predloži obračun, dolžan plačati DDV. Plačilo DDV mora biti izvršeno v istem času kot oddajanje obračuna. Zakon ne določa posebnih pogojev za plačilo DDV, zato mora biti plačan v istem času kot oddajanje obračuna. RELEVANTNI PRAVNI VIRI: - Zakon o davku na dodano vrednost (ZDDV-1), 88. člen OMEJITVE IN OPOMBE: - Zakon ne določa posebnih pogojev za plačilo DDV, zato mora biti plačan v istem času kot oddajanje obračuna. - Če obstajajo izjeme ali posebni pogoji, jih morate preveriti pri uradnih virih ali strokovnjaku.
+
+====================================================================================================
+ID: ZDDV1_definition_024
+QUESTION:
+Katere osnovne podatke mora vsebovati DDV račun?
+
+GOLD ANSWER:
+Račun mora med drugim vsebovati datum izdaje, zaporedno številko, DDV številko izdajatelja, v določenih primerih DDV številko kupca, ime in naslov obeh strank, količino in vrsto blaga oziroma storitev, datum dobave, davčno osnovo, stopnjo DDV ter znesek DDV.
+
+MODEL ANSWER:
+**KRATEK POVZETEK** DDV račun mora vsebovati naslednje osnovne podatke: - datum izdaje računa - zaporedno številko, ki omogoča identifikacijo računa - identifikacijsko številko za DDV davčnega zavezanca - identifikacijsko številko za DDV kupca ali naročnika - ime in naslov davčnega zavezanca in njegovega kupca ali naročnika - količino in vrsto dobavljenega blaga oziroma obseg in vrsto opravljenih storitev - datum, ko je bila opravljena dobava blaga, ali datum, ko je bila storitev opravljena oziroma končana - davčno osnovo, od katere se obračuna DDV - ceno na enoto brez DDV ter kakršnakoli znižanja cen in popuste, ki niso vključeni v ceno na enoto - stopnjo DDV - znesek DDV **PODRIBNA RAZLAGA** DDV račun je pomemben dokument, ki daje podrobnosti o dobavi blaga ali storitvi, ki je podložna davku na dodano vrednost. Podatki, ki morajo biti vsebovani v DDV računu, so navedeni v zakonu o davku na dodano vrednost (ZDDV-1), posebej v 82. členu. **RELEVANTNI PRAVNI VIRI** * Zakon o davku na dodano vrednost (ZDDV-1), 82. člen **OMEJITVE IN OPOMBE** DDV račun mora biti izdan v skladu s predpisi, ki urejajo davek na dodano vrednost in davčni postopek. Davčni zavezanec je obvezan izdati DDV račun za vsako dobavo blaga ali storitev, ki je podložna davku na dodano vrednost.
+
+====================================================================================================
+ID: ZDDV1_edge_025
+QUESTION:
+Oddajam poslovni prostor. Ali je najemnina vedno oproščena DDV?
+
+GOLD ANSWER:
+Ne vedno. Najem oziroma zakup nepremičnin je sicer praviloma oproščen DDV, vendar zakon izrecno izvzema nekatere primere, kot so hotelske in podobne nastanitve, oddajanje garaž in parkirnih površin, dajanje v najem trajno instalirane opreme in strojev ter najem sefov. Poleg tega se lahko davčni zavezanec z najemnikom ali kupcem nepremičnine, ki ima pravico do celotnega odbitka DDV, dogovori za obdavčitev, če pred opravljeno dobavo skupaj podata izjavo pristojnemu davčnemu uradu.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Najemnina za poslovni prostor ni vedno oproščena DDV. Obstajajo izjeme in posebni pogoji, ki lahko vplivajo na odmero DDV. PODRIBNA RAZLAGA: Podrobno analizirajmo kontekst: - Zakon o davku na dodano vrednost (ZDDV-1) ne omenja posebnega oproščanja za najemnino za poslovni prostor. - Zakon o davkih občanov (ZDO) v 161. členu omenja, da davek od premoženja se ne plačuje od poslovnih prostorov, ki jih lastnik uporablja za opravljanje gospodarske oziroma poklicne dejavnosti. Vendar to ne pomeni, da najemnina za poslovni prostor vedno ni oproščena DDV. - Pravilnik o izvajanju Zakona o davku na dodano vrednost (73. člen) opredeljuje najem oziroma zakup nepremičnin kot dajanje nepremičnin v najem oziroma zakup, vključno s podnajemom. V tem kontekstu je najemnina za poslovni prostor obdavčitev. ZAKONI IN ČLENI: - ZDDV-1: ni posebnega oproščenja za najemnino za poslovni prostor - ZDO: 161. člen - davek od premoženja se ne plačuje od poslovnih prostorov, ki jih lastnik uporablja za opravljanje gospodarske oziroma poklicne dejavnosti - Pravilnik: 73. člen - najem oziroma zakup nepremičnin je obdavčitev OMEJITVE IN OPOMBE: - Najemnina za poslovni prostor ni vedno oproščena DDV. - Obstajajo izjeme in posebni pogoji, ki lahko vplivajo na odmero DDV. - Preverite uradne viri ali priporočite strokov
+
+====================================================================================================
+ID: ZTRO1_scenario_026
+QUESTION:
+Iz Italije bi za lastno porabo pripeljal 8 litrov žganih pijač. Ali moram v Sloveniji plačati trošarino?
+
+GOLD ANSWER:
+Če fizična oseba trošarinske izdelke sama vnese iz druge države članice za lastno porabo, obveznost za obračun trošarine praviloma ne nastane, dokler količine ne presegajo zakonskih meja. Za žgane pijače je ta meja 10 litrov, zato je 8 litrov znotraj zakonskega praga. Vendar lahko davčni organ tudi pri količinah pod pragom glede na okoliščine presodi, da so izdelki namenjeni za opravljanje dejavnosti.
+
+MODEL ANSWER:
+KRATEK POVZETEK: Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti, ali morate plačati trošarino. PODRIBNA RAZLAGA: V 7. členu Zakona o trošarinah (ZTro-1) je navedeno, da se plačuje trošarina od 10 litrov žganih pijač. Vendar pa v 14. členu Zakona o trošarinah (ZTro-1) je navedeno, da obveznost za obračun trošarine ne nastane pri vnosu trošarinskih izdelkov, ki so namenjeni za lastno porabo in količine v trenutku vnosa ne presegajo določenih količin. POŽELITEV: Da bi se lahko zanesljivo odločil, ali morate plačati trošarino, bi bilo treba vedno preveriti količino žganih pijač in njihov namen. Lahko bi bilo potrebno tudi predložiti dokumente, ki potrjujejo lastno porabo.
+
+====================================================================================================
+ID: ZTRO1_edge_027
+QUESTION:
+Ali lahko označeno kurilno olje natočim v traktor ali osebni avto?
+
+GOLD ANSWER:
+Označeni energenti so namenjeni za ogrevanje in se ne smejo uporabljati za pogon motornih vozil, plovil ali drugih motorjev. Zakon dopušča le zelo ozko izjemo za hladilno-grelne naprave vozil, če sta rezervoarja ločena.
+
+MODEL ANSWER:
+KONTEKST: [8] ZAKON: Zakon o trošarinah (ZTro-1) ČLEN: 94. člen BESEDILO: (1) Za energente, ki se dokazljivo porabijo za pogon kmetijske in gozdarske mehanizacije (vključno s traktorji), imajo kupci pravico do vračila trošarine v višini 70 % povprečnega zneska trošarine, ki je predpisana za plinsko olje za pogonski namen v obdobju, za katerega se zahteva vračilo trošarine. [9] ZAKON: Zakon o trošarinah (ZTro-1) ČLEN: 98. člen BESEDILO: (1) Plinska olja iz tarifnih oznak od 2710 19 43 do 2710 19 48 in od 2710 20 11 do 2710 20 19 ter kerozini iz tarifne oznake 2710 19 21 in 2710 19 25, ki se uporabljajo kot gorivo za ogrevanje, morajo biti označeni s predpisanim sredstvom za označevanje. ODGOVOR: Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti, ali lahko označeno kurilno olje natočim v traktor ali osebni avto. Členi zakona o trošarinah (ZTro-1) se nanašajo na energente, ki se uporabljajo za pogon kmetijske in gozdarske mehanizacije (vključno s traktorji), ter na plinska olja iz tarifnih oznak, ki se uporabljajo kot gorivo za ogrevanje. Kurilno olje ni navedeno med energetiki, ki se uporabljajo za pogon kmetijske in gozdarske mehanizacije, ter ni označeno kot plinsko olje iz tarifnih oznak, ki se uporabljajo kot gorivo za og
+
+====================================================================================================
+ID: ZDDD_unanswerable_028
+QUESTION:
+Kateri točen obrazec v eDavkih moram oddati za napoved darila nepremičnine?
+
+GOLD ANSWER:
+Iz teh virov ni mogoče zanesljivo ugotoviti točnega imena ali oznake obrazca v sistemu eDavki. Viri določajo obveznost in rok za napoved darila, ne pa poimenovanja konkretnega elektronskega obrazca ali korakov v uporabniškem vmesniku.
+
+MODEL ANSWER:
+Na podlagi podanega konteksta ni mogoče zanesljivo določiti, kateri obrazec v eDavkih morate oddati za napoved darila nepremičnine. Vendar lahko navajam, da za napoved darila nepremičnine morate uporabiti obrazec, ki je določen s Pravilnikom o obrazcu za napoved za odmero davka na promet nepremičnin (Pravilnik o obrazcu za napoved za odmero davka na promet nepremičnin, 2. člen). V tem pravilniku je določen obrazec Napoved za odmero davka na promet nepremičnin, ki je Priloga tega pravilnika in njegov sestavni del. Ta obrazec je namenjen za napoved darila nepremičnine in ga morate izpolniti v skladu z navodili, ki so del tega obrazca. Zato priporočam, da preverite spletno stran Davčne uprave Republike Slovenije (http://www.durs.gov.si/si/aktualno/) ali sistem eDavki (http://eDavki.durs.gov.si) za najnovejše informacije o obrazcih in navodilih za izpolnjevanje.
+
+====================================================================================================
+ID: ZDAVP2_unanswerable_029
+QUESTION:
+Koliko časa FURS trenutno v praksi dejansko potrebuje za vračilo preplačila davka?
+
+GOLD ANSWER:
+Iz teh virov je razviden le zakonski rok za vračilo preplačila davka, ne pa dejanski trenutni čas reševanja v praksi. ZDavP-2 določa praviloma 30 dni, vendar iz samega besedila zakona ni mogoče zanesljivo ugotoviti, koliko časa vračila trenutno trajajo v realnih postopkih.
+
+MODEL ANSWER:
+Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti, koliko časa FURS trenutno v praksi dejansko potrebuje za vračilo preplačila davka.
+
