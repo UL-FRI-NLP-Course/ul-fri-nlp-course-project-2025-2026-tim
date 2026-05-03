@@ -161,19 +161,19 @@ Upon receiving a user query, the text is embedded using \texttt{BAAI/bge-m3}, an
 
 The RAG prompt, along with the user query, system-level formatting instructions, and conversation history, is sent to a vLLM server running \texttt{Llama-3.1-8B-Instruct}~\cite{llmllama} via the \texttt{OpenAI} API message interface. The prompt enforces strict reliance on the provided legal context, requiring the model to cite relevant laws and articles, avoid hallucinations, and explicitly indicate when the answer cannot be determined from the retrieved sources.
 
-\subsection*{Evaluation Dataset}
+\subsection*{Evaluation Dataset and Preliminary Analysis}
 
 We prepared a gold evaluation dataset for Slovenian tax-related question answering. The dataset contains practical user questions based on several Slovenian tax laws, including scenario-based questions, edge cases, definition questions, and a small number of unanswerable questions. The purpose of including different question types is to test not only whether the system can retrieve relevant legal provisions, but also whether it avoids generating unsupported answers when the available context is insufficient.
 
 The evaluation examples were created with the help of several LLMs. We used them to generate possible tax-related questions, suggest answers, and check the answers against the relevant legal sources. This gave us a wider set of examples than we would likely get from writing all questions manually. After that, we manually reviewed the dataset and corrected the answers where needed. In particular, we checked whether each answer was supported by the cited legal text and whether the question represented a realistic use case for a Slovenian tax assistant.
 
+We also ran the current chatbot pipeline on the gold questions and manually compared the generated answers with the reference answers. This preliminary analysis was qualitative rather than metric-based, but it helped reveal several recurring issues. In some cases, the system retrieved or relied on a less relevant legal act, including older sources. Some answers were partially correct but missed important exceptions or conditions, while others were overly cautious and stated that the answer could not be determined even when the gold answer was clear. We also observed a few cases where the model added unsupported details or misinterpreted legal negation.
+
 \subsection*{Future Work}
 
-Next, we will run the chatbot on the prepared evaluation set. For each question, we will store the retrieved chunks, the generated answer, and the sources used by the model. We will then compare the answer with the gold answer and check whether the model reached the correct conclusion from the available legal text.
+In future work, we plan to make the evaluation more systematic. For each question, we will store the retrieved chunks, the generated answer, and the sources used by the model, then score the result against the gold answer and expected legal sources. The evaluation should measure answer correctness, completeness, source relevance, and faithfulness to the provided legal context.
 
-For scoring, we will combine manual review with LLM-based evaluation. A stronger LLM can help flag incomplete, unsupported, or contradictory answers, but the final judgement should still be checked manually, especially for borderline legal cases.
-
-We will also use the evaluation results to adjust the prompt and retrieval settings. In particular, we want to test how many chunks should be retrieved and reranked before generation. This matters because legal answers often depend on short exceptions or conditions that may not appear in the most obvious article.
+We also plan to combine manual review with LLM-based evaluation. A stronger LLM can help flag incomplete, unsupported, or contradictory answers, while manual inspection remains important for borderline legal cases. The results will then be used to tune retrieval and reranking parameters, filter outdated or less relevant sources, and improve the final prompting layer.
  
 \bibliographystyle{unsrt}
 \bibliography{report}
