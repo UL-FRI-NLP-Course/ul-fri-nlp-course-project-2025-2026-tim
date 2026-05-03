@@ -11,7 +11,7 @@ class RAGHandler:
     def __init__(self, settings):
         self.settings = settings
 
-        self.rag_folder_path = os.path.join(settings.chatbot_dir_path, settings.rag_data_path)
+        self.rag_folder_path = os.path.join(settings.rag_data_path)
 
         print('Loading RAG Data')
         chunks_path = os.path.join(self.rag_folder_path, "chunks.jsonl")

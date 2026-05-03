@@ -1,11 +1,11 @@
 model_dir_path: /models
 chatbot_dir_path: /workspace
-rag_data_path: data/rag_store/register_predpisov_normal
+rag_data_path: /models/data/rag_store/register_predpisov_normal
 server_boot_file_name: configs/server_boot_config.yaml
 system_prompt_file_name: configs/system_prompt.yaml
 
 embedding_model: BAAI/bge-m3
-reranking_model: BAAI/bge-reranker-large
+reranking_model: BAAI/bge-reranker-v2-m3
 LLM_model: meta-llama/Llama-3.1-8B-Instruct
 
 top_k_chunks: 50
