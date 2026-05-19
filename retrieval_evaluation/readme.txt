@@ -1,0 +1,1 @@
+This is not meant to be used on the HPC cluster, its just a record for the methodology used. Everything is meant to be ran locally once so dont yell at me that it doesnt work.

@@ -1,8 +1,9 @@
 #!/bin/bash
 
+LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
+
 SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img
-LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
 srun \
     --nodes=1 \

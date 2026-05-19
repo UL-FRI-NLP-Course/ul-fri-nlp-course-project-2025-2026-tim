@@ -1,10 +1,11 @@
 #!/bin/bash
 
-SIF_FILE=./containers/chatbot_container.sif
-OVERLAY_FILE=./containers/chatbot_overlay.img
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
-#my hf auth token - bregar
+SIF_FILE=./containers/chatbot_container.sif
+OVERLAY_FILE=./containers/chatbot_overlay.img
+
+#my hf auth token - bregar - dont steal please :)
 HUGGINGFACE_HUB_TOKEN=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
 
 srun \
