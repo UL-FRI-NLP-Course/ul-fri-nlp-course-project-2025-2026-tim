@@ -1,6 +1,16 @@
 #!/bin/bash
 
-LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ENV_FILE="${REPO_ROOT}/.env"
+
+if [[ -f "${ENV_FILE}" ]]; then
+    set -a
+    source "${ENV_FILE}"
+    set +a
+fi
+
+LLM_MODELS_DIR="${LLM_MODELS_DIR:-/d/hpc/projects/onj_fri/group-tim}"
 
 SIF_FILE=./containers/chatbot_container.sif
 OVERLAY_FILE=./containers/chatbot_overlay.img

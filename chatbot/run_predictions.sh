@@ -6,14 +6,14 @@ ENV_FILE="${REPO_ROOT}/.env"
 
 if [[ -f "${ENV_FILE}" ]]; then
     set -a
-    # shellcheck disable=SC1090
     source "${ENV_FILE}"
     set +a
 fi
 
+LLM_MODELS_DIR="${LLM_MODELS_DIR:-/d/hpc/projects/onj_fri/group-tim}"
+
 SIF_FILE="${SCRIPT_DIR}/containers/chatbot_container.sif"
 OVERLAY_FILE="${SCRIPT_DIR}/containers/chatbot_overlay.img"
-LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
 srun \
     --nodes=1 \
