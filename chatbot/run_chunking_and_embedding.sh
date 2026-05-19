@@ -4,14 +4,23 @@ set -euo pipefail
 
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
-SIF_FILE=./containers/chatbot_container.sif
-OVERLAY_FILE=./containers/chatbot_overlay.img
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ENV_FILE="${REPO_ROOT}/.env"
+
+if [[ -f "${ENV_FILE}" ]]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "${ENV_FILE}"
+    set +a
+fi
+
+SIF_FILE="${SCRIPT_DIR}/containers/chatbot_container.sif"
+OVERLAY_FILE="${SCRIPT_DIR}/containers/chatbot_overlay.img"
+LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 INPUT_FILE=/workspace/data/register-predpisov.jsonl
 RAG_STORE_DIR=/models/data/rag_store
 CONFIG_FILE=/workspace/configs/config.yaml
-
-#my hf auth token - bregar - dont steal please :)
-HUGGINGFACE_HUB_TOKEN=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
 
 echo "Choose chunking strategy:"
 echo "  1) normal         whitelist + keyword relevance filtering"
@@ -55,7 +64,7 @@ srun \
     --pty \
     singularity exec --nv \
         --overlay $OVERLAY_FILE:ro \
-        -B $(pwd):/workspace \
+        -B "${SCRIPT_DIR}":/workspace \
         -B ${LLM_MODELS_DIR}:/models \
         $SIF_FILE \
         bash -c "

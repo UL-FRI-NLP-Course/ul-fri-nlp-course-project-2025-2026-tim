@@ -67,15 +67,39 @@ These chunks were embedded with the `BAAI/bge-m3` model, so make sure it matches
 
 ## Running the Chatbot
 
-**Step 1** — Start the LLM server (queued as an HPC job):
+**Step 1** - Start the LLM server (queued as an HPC job):
 ```bash
 bash run_llm_server.sh
 ```
 Server connection details are written automatically to `configs/server_boot_config.yaml` on boot. The client should automatically load them on startup.
 
-**Step 2** — Start the chatbot client (must be run as an interactive job):
+**Step 2** - Start the chatbot client (must be run as an interactive job):
 ```bash
 bash run_chatbot_client.sh
 ```
 
-> The client job **must be interactive** — it provides the terminal interface for chatting with the model.
+> The client job **must be interactive** - it provides the terminal interface for chatting with the model.
+
+---
+
+## Evaluation
+
+Set local secrets in the repo-root `.env` file before running the evaluation pipeline. See `.env.example` for the expected variables.
+
+If `OPENAI_API_KEY` is present in `.env`, `evaluation/scripts/evaluate_predictions.py` uses OpenAI directly by default. Set `OPENAI_JUDGE_MODEL` in `.env` to pick the hosted judge model; the default is `gpt-5-nano`.
+
+From the `chatbot/` directory, you can run:
+
+```bash
+bash run_predictions.sh
+```
+
+to generate `evaluation/outputs/predictions/predictions.jsonl`, and:
+
+```bash
+bash run_eval.sh
+```
+
+to evaluate those predictions and write `evaluation/outputs/evaluations/judgments.jsonl` plus `evaluation/outputs/evaluations/judgment_summary.json`.
+
+The detailed evaluation pipeline is documented in `evaluation/scripts/Readme.md`.

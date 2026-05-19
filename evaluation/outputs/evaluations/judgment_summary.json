@@ -1,0 +1,12 @@
+{
+  "judge_model": "gpt-4o-mini",
+  "total": 29,
+  "judged": 29,
+  "failed": 0,
+  "average_correctness_score": 2.103448275862069,
+  "average_completeness_score": 2.103448275862069,
+  "average_faithfulness_score": 2.0,
+  "average_citation_score": 0.7931034482758621,
+  "average_overall_score": 7.0,
+  "pass_rate": 0.6551724137931034
+}

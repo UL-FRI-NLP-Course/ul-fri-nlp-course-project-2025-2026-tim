@@ -24,13 +24,13 @@ def main():
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("./../outputs/predictions.jsonl"),
+        default=Path("./../outputs/predictions/predictions.jsonl"),
         help="Path to predictions.jsonl",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("./../outputs/answer_comparison.txt"),
+        default=Path("./../outputs/predictions/answer_comparison.txt"),
         help="Where to save gold vs predicted answers",
     )
     args = parser.parse_args()
