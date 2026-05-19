@@ -129,15 +129,8 @@ class RAGHandler:
         
         final_chunk_data = []
         for chunk, cross in zip(chunks, cross_scores):
-            chunk_info = {
-                'record_id' : chunk['record_id'],
-                'law_title' : chunk['law_title'],
-                'article_label' : chunk['article_label'],
-                'paragraph_number' : chunk['paragraph_number'],
-                'chunk_part' : chunk.get('chunk_part'),
-                'chunk_raw_text' : chunk['text'],
-                'cross_score' : cross
-            }
+            chunk_info = dict(chunk)
+            chunk_info["cross_score"] = float(cross)
             final_chunk_data.append(chunk_info)
 
         final_chunk_data.sort(key=lambda x: x["cross_score"], reverse=True)
@@ -146,11 +139,7 @@ class RAGHandler:
         
         
 
-    def build_RAG_prompt(self, user_text, chat_history):
-        query_vector = self._embed_user_text(user_text)
-        retrieved_chunks = self._retrieve_by_query_vector(query_vector)
-        reordered_chunks = self._reorder_retrieved_chunks(user_text, retrieved_chunks)
-
+    def _build_rag_prompt_from_chunks(self, reordered_chunks):
         context_blocks = []
 
         for i, chunk in enumerate(reordered_chunks):
@@ -158,7 +147,7 @@ class RAGHandler:
             article_label = chunk['article_label']
             paragraph_number = chunk.get('paragraph_number')
             chunk_part = chunk.get('chunk_part')
-            text = chunk.get('chunk_raw_text')
+            text = chunk.get('text')
 
             block_lines = [
                 f"[{i+1}]",
@@ -203,4 +192,17 @@ class RAGHandler:
 
         #print(rag_prompt)
         
+        return rag_prompt
+
+
+    def build_rag_context(self, user_text, chat_history=None):
+        query_vector = self._embed_user_text(user_text)
+        retrieved_chunks = self._retrieve_by_query_vector(query_vector)
+        reordered_chunks = self._reorder_retrieved_chunks(user_text, retrieved_chunks)
+        rag_prompt = self._build_rag_prompt_from_chunks(reordered_chunks)
+        return rag_prompt, reordered_chunks
+
+
+    def build_RAG_prompt(self, user_text, chat_history):
+        rag_prompt, _ = self.build_rag_context(user_text, chat_history)
         return rag_prompt

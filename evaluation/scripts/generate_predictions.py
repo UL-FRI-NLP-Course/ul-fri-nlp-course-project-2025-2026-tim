@@ -16,19 +16,24 @@ CHATBOT_SRC = CHATBOT_ROOT / "src"
 if str(CHATBOT_SRC) not in sys.path:
     sys.path.insert(0, str(CHATBOT_SRC))
 
-from ChatbotSettings import load_settings 
-from RAGHandler import RAGHandler  
+from ChatbotSettings import load_settings
+from RAGHandler import RAGHandler
 
 
 DEFAULT_GOLD_PATH = REPO_ROOT / "evaluation" / "data" / "gold_eval.jsonl"
-DEFAULT_OUTPUT_PATH = REPO_ROOT / "evaluation" / "outputs" / "predictions.jsonl"
+DEFAULT_OUTPUT_PATH = (
+    REPO_ROOT / "evaluation" / "outputs" / "predictions" / "predictions.jsonl"
+)
+DEFAULT_PROMPT_PATH = (
+    REPO_ROOT / "evaluation" / "prompts" / "chatbot_system_prompt.yaml"
+)
 DEFAULT_CHATBOT_CONFIG = CHATBOT_ROOT / "configs" / "config.yaml"
 DEFAULT_MODEL_CACHE = REPO_ROOT / ".cache" / "models"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Evaluate the chatbot directly against the gold dataset."
+        description="Generate chatbot predictions for the gold evaluation dataset."
     )
     parser.add_argument(
         "--gold",
@@ -41,6 +46,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=DEFAULT_OUTPUT_PATH,
         help="Where to write predictions.jsonl",
+    )
+    parser.add_argument(
+        "--prompt",
+        type=Path,
+        default=DEFAULT_PROMPT_PATH,
+        help="Path to the evaluation system prompt YAML or text file.",
     )
     parser.add_argument(
         "--chatbot-config",
@@ -74,7 +85,7 @@ def parse_args() -> argparse.Namespace:
         "--limit",
         type=int,
         default=None,
-        help="Evaluate only the first N gold examples.",
+        help="Generate predictions for only the first N gold examples.",
     )
     parser.add_argument(
         "--timeout",
@@ -116,6 +127,9 @@ def validate_runtime_assets(args: argparse.Namespace, settings) -> None:
     if not args.gold.exists():
         missing_paths.append(args.gold)
 
+    if not args.prompt.exists():
+        missing_paths.append(args.prompt)
+
     if not args.chatbot_config.exists():
         missing_paths.append(args.chatbot_config)
 
@@ -139,11 +153,13 @@ def validate_runtime_assets(args: argparse.Namespace, settings) -> None:
         )
 
 
-def load_system_prompt(settings) -> str:
-    system_prompt_path = Path(settings.chatbot_dir_path) / settings.system_prompt_file_name
-    with open(system_prompt_path, "r", encoding="utf-8") as handle:
-        prompt_yaml = yaml.safe_load(handle)
-    return prompt_yaml["text"].strip()
+def load_prompt(prompt_path: Path) -> str:
+    with open(prompt_path, "r", encoding="utf-8") as handle:
+        if prompt_path.suffix.lower() in {".yaml", ".yml"}:
+            prompt_yaml = yaml.safe_load(handle)
+            return prompt_yaml["text"].strip()
+
+        return handle.read().strip()
 
 
 def load_boot_config(path: Path) -> dict:
@@ -160,7 +176,9 @@ def determine_llm_runtime(args: argparse.Namespace, settings) -> tuple[str, str]
 
     boot_config_path = args.server_boot_config
     if boot_config_path is None:
-        boot_config_path = Path(settings.chatbot_dir_path) / settings.server_boot_file_name
+        boot_config_path = (
+            Path(settings.chatbot_dir_path) / settings.server_boot_file_name
+        )
 
     if boot_config_path.exists():
         boot_config = load_boot_config(boot_config_path)
@@ -183,72 +201,6 @@ def read_jsonl(path: Path):
             line = line.strip()
             if line:
                 yield json.loads(line)
-
-
-def retrieve_sources(rag_handler: RAGHandler, question: str):
-    query_vector = rag_handler._embed_user_text(question)
-    retrieved_chunks = rag_handler._retrieve_by_query_vector(query_vector)
-
-    cross_inputs = []
-    for chunk in retrieved_chunks:
-        chunk_text = f"{chunk['law_title']}: {chunk['text']}"
-        cross_inputs.append([question, chunk_text])
-
-    cross_scores = rag_handler.reranking_model.predict(cross_inputs)
-
-    reranked_chunks = []
-    for chunk, cross_score in zip(retrieved_chunks, cross_scores):
-        enriched_chunk = dict(chunk)
-        enriched_chunk["cross_score"] = float(cross_score)
-        reranked_chunks.append(enriched_chunk)
-
-    reranked_chunks.sort(key=lambda item: item["cross_score"], reverse=True)
-    return reranked_chunks[: min(len(reranked_chunks), rag_handler.settings.reorder_top_n_chunks)]
-
-
-def build_rag_prompt(retrieved_sources: list[dict]) -> str:
-    context_blocks = []
-
-    for index, chunk in enumerate(retrieved_sources, start=1):
-        block_lines = [
-            f"[{index}]",
-            f"ZAKON: {chunk['law_title']}",
-            f"ČLEN: {chunk['article_label']}",
-        ]
-
-        if chunk.get("paragraph_number"):
-            block_lines.append(f"ODSTAVEK: {chunk['paragraph_number']}")
-
-        block_lines.append("BESEDILO:")
-        block_lines.append(chunk["text"].strip())
-        context_blocks.append("\n".join(block_lines))
-
-    context_str = "\n\n".join(context_blocks)
-
-    return "\n".join(
-        [
-            "KONTEKST (relevantni pravni viri):",
-            "",
-            "Spodaj so odlomki slovenske zakonodaje. Vsak blok vsebuje:",
-            "- ZAKON (ime zakona)",
-            "- ČLEN",
-            "- ODSTAVEK (če obstaja)",
-            "- BESEDILO",
-            "",
-            context_str,
-            "",
-            "NAVODILA ZA UPORABO KONTEKSTA:",
-            "",
-            "- Odgovarjaj izključno na podlagi zgornjega konteksta.",
-            "- Ne uporabljaj zunanjega znanja, če ni nujno potrebno.",
-            "- Vedno jasno navedi zakon in člen, na katerega se sklicuješ.",
-            '- Če odgovor ni neposredno razviden iz konteksta, napiši:',
-            '  "Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti."',
-            "- Ne izmišljuj si zakonov ali členov.",
-            "- Če obstajajo možne izjeme ali posebni pogoji, jih omeni, če so razvidni iz konteksta.",
-        ]
-    )
-
 
 def normalize_sources(retrieved_sources: list[dict]) -> list[dict]:
     normalized = []
@@ -283,8 +235,7 @@ def ask_chatbot(
     settings,
     timeout: int,
 ) -> dict:
-    sources = retrieve_sources(rag_handler, question)
-    rag_prompt = build_rag_prompt(sources)
+    rag_prompt, sources = rag_handler.build_rag_context(question)
 
     response = requests.post(
         resolve_chat_completion_url(llm_base_url),
@@ -321,13 +272,16 @@ def main():
 
     args.gold = args.gold.resolve()
     args.output = args.output.resolve()
+    args.prompt = args.prompt.resolve()
     args.chatbot_config = args.chatbot_config.resolve()
     if args.server_boot_config is not None:
         args.server_boot_config = args.server_boot_config.resolve()
 
-    settings = load_runtime_settings(args.chatbot_config, args.model_cache_dir.resolve())
+    settings = load_runtime_settings(
+        args.chatbot_config, args.model_cache_dir.resolve()
+    )
     validate_runtime_assets(args, settings)
-    system_prompt = load_system_prompt(settings)
+    system_prompt = load_prompt(args.prompt)
     llm_base_url, llm_model = determine_llm_runtime(args, settings)
 
     rag_handler = RAGHandler(settings)
@@ -340,7 +294,7 @@ def main():
 
     with open(args.output, "w", encoding="utf-8") as handle:
         for index, item in enumerate(examples, start=1):
-            print(f"[{index}] Evaluating {item['id']}")
+            print(f"[{index}] Generating prediction for {item['id']}")
 
             try:
                 prediction = ask_chatbot(

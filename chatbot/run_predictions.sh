@@ -1,7 +1,5 @@
 #!/bin/bash
 
-LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 ENV_FILE="${REPO_ROOT}/.env"
@@ -23,24 +21,20 @@ srun \
     --cpus-per-task=4 \
     --gres=gpu:1 \
     --partition=gpu \
-    --time=01:30:00 \
+    --time=00:30:00 \
     --pty \
     singularity exec --nv \
         --overlay $OVERLAY_FILE:ro \
-        -B "${SCRIPT_DIR}":/workspace \
+        -B "${REPO_ROOT}":/workspace \
         -B ${LLM_MODELS_DIR}:/models \
         $SIF_FILE \
         bash -c "
             echo 'Running on: ' \$(hostname)
             source /opt/venv/bin/activate
 
-            export HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
-            export HF_HOME=/models/hf_cache
-            export TRANSFORMERS_CACHE=/models/hf_cache
-            export HUGGINGFACE_HUB_CACHE=/models/hf_cache
-            export TORCH_HOME=/models/torch_cache
-            export TRITON_CACHE_DIR=/models/triton_cache
-            export VLLM_CACHE_ROOT=/models/vllm_cache
-            
-            python /workspace/src/run_openai_llm_server.py
+            python /workspace/evaluation/scripts/generate_predictions.py \
+                --gold /workspace/evaluation/data/gold_eval.jsonl \
+                --prompt /workspace/evaluation/prompts/chatbot_system_prompt.yaml \
+                --output /workspace/evaluation/outputs/predictions/predictions.jsonl \
+                --chatbot-config /workspace/chatbot/configs/config.yaml \
         "

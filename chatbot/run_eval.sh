@@ -1,7 +1,18 @@
 #!/bin/bash
 
-SIF_FILE=./containers/chatbot_container.sif
-OVERLAY_FILE=./containers/chatbot_overlay.img
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ENV_FILE="${REPO_ROOT}/.env"
+
+if [[ -f "${ENV_FILE}" ]]; then
+    set -a
+    # shellcheck disable=SC1090
+    source "${ENV_FILE}"
+    set +a
+fi
+
+SIF_FILE="${SCRIPT_DIR}/containers/chatbot_container.sif"
+OVERLAY_FILE="${SCRIPT_DIR}/containers/chatbot_overlay.img"
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/group-tim
 
 srun \
@@ -10,19 +21,20 @@ srun \
     --cpus-per-task=4 \
     --gres=gpu:1 \
     --partition=gpu \
-    --time=00:30:00 \
+    --time=00:45:00 \
     --pty \
     singularity exec --nv \
         --overlay $OVERLAY_FILE:ro \
-        -B $(pwd)/..:/workspace \
+        -B "${REPO_ROOT}":/workspace \
         -B ${LLM_MODELS_DIR}:/models \
         $SIF_FILE \
         bash -c "
             echo 'Running on: ' \$(hostname)
             source /opt/venv/bin/activate
 
-            python /workspace/evaluation/scripts/run_eval.py \
-                --gold /workspace/evaluation/data/gold_eval.jsonl \
-                --output /workspace/evaluation/outputs/predictions.jsonl \
-                --chatbot-config /workspace/chatbot/configs/config.yaml \
+            python /workspace/evaluation/scripts/evaluate_predictions.py \
+                --input /workspace/evaluation/outputs/predictions/predictions.jsonl \
+                --output /workspace/evaluation/outputs/evaluations/judgments.jsonl \
+                --summary /workspace/evaluation/outputs/evaluations/judgment_summary.json \
+                --judge-prompt /workspace/evaluation/prompts/judge_prompt.yaml
         "
