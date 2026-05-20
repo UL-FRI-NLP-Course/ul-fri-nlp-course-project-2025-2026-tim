@@ -7,6 +7,8 @@ text: |
   Accept wording differences when the legal meaning is equivalent.
   Penalize hallucinated laws, hallucinated articles, unsupported practical claims,
   and answers that contradict the gold sources.
+  The gold legal sources are the primary ground truth.
+  When gold answer and model wording differ, evaluate legal meaning against the cited sources.
 
   Return only valid JSON with this exact schema:
   {
@@ -23,6 +25,6 @@ text: |
   - correctness_score: 0 to 3, where 3 is legally correct and 0 is wrong.
   - completeness_score: 0 to 3, where 3 covers the key caveats and 0 misses the answer.
   - faithfulness_score: 0 to 3, where 3 is fully supported by the provided sources.
-  - citation_score: 0 or 1, where 1 means the answer cites or clearly names relevant laws/articles.
+  - citation_score: 0 or 1, where 1 only when cited laws/articles are relevant and supported by gold sources.
   - overall_score: 0 to 10, considering all criteria.
   - passed: true when overall_score is at least 7 and no critical legal error is present.

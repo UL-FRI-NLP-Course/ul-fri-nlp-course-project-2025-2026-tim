@@ -148,50 +148,52 @@ class RAGHandler:
             paragraph_number = chunk.get('paragraph_number')
             chunk_part = chunk.get('chunk_part')
             text = chunk.get('text')
+            score = chunk.get('cross_score')
 
             block_lines = [
-                f"[{i+1}]",
+                f"=== VIR [{i+1}] ===",
                 f"ZAKON: {law_title}",
                 f"ČLEN: {article_label}",
             ]
 
-            if paragraph_number:
-                block_lines.append(f"ODSTAVEK: {paragraph_number}")
-            if chunk_part:
-                block_lines.append(f"DEL ČLENA: {chunk_part}")
+            if score is not None:
+                block_lines.append(
+                    f"RELEVANCA: {score:.3f}"
+                )
 
+            if paragraph_number:
+                block_lines.append(
+                    f"ODSTAVEK: {paragraph_number}"
+                )
+
+            if chunk_part:
+                block_lines.append(
+                    f"DEL ČLENA: {chunk_part}"
+                )
+
+            block_lines.append("")
             block_lines.append("BESEDILO:")
             block_lines.append(text.strip())
+            block_lines.append("")
+            block_lines.append(
+                f"=== KONEC VIRA [{i+1}] ==="
+            )
 
-            context_blocks.append("\n".join(block_lines))
+            context_blocks.append(
+                "\n".join(block_lines)
+            )
 
         context_str = "\n\n".join(context_blocks)
 
         rag_prompt = "\n".join([
-            "KONTEKST (relevantni pravni viri):",
+            "KONTEKST SLOVENSKE ZAKONODAJE",
             "",
-            "Spodaj so odlomki slovenske zakonodaje. Vsak blok vsebuje:",
-            "- ZAKON (ime zakona)",
-            "- ČLEN",
-            "- ODSTAVEK (če obstaja)",
-            "- DEL ČLENA (če je bil člen zaradi dolžine razdeljen)",
-            "- BESEDILO",
+            "Spodaj so pravni viri, urejeni po relevanci.",
+            "Več virov lahko vsebuje dodatne pogoje ali izjeme.",
             "",
-            context_str,
-            "",
-            "NAVODILA ZA UPORABO KONTEKSTA:",
-            "",
-            "- Odgovarjaj izključno na podlagi zgornjega konteksta.",
-            "- Ne uporabljaj zunanjega znanja, če ni nujno potrebno.",
-            "- Vedno jasno navedi zakon in člen, na katerega se sklicuješ.",
-            '- Če odgovor ni neposredno razviden iz konteksta, napiši:',
-            '  "Na podlagi podanega konteksta tega ni mogoče zanesljivo določiti."',
-            "- Ne izmišljuj si zakonov ali členov.",
-            "- Če obstajajo možne izjeme ali posebni pogoji, jih omeni, če so razvidni iz konteksta.",
+            context_str
         ])
 
-        #print(rag_prompt)
-        
         return rag_prompt
 
 
