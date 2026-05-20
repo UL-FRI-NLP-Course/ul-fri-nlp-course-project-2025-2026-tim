@@ -33,8 +33,8 @@ srun \
             source /opt/venv/bin/activate
 
             python /workspace/evaluation/scripts/evaluate_predictions.py \
-                --input /workspace/evaluation/outputs/predictions/predictions.jsonl \
-                --output /workspace/evaluation/outputs/evaluations/judgments.jsonl \
-                --summary /workspace/evaluation/outputs/evaluations/judgment_summary.json \
+                --input /workspace/evaluation/outputs/predictions/predictions3.jsonl \
+                --output /workspace/evaluation/outputs/evaluations/judgments3.jsonl \
+                --summary /workspace/evaluation/outputs/evaluations/judgment_summary3.json \
                 --judge-prompt /workspace/evaluation/prompts/judge_prompt.yaml
         "
