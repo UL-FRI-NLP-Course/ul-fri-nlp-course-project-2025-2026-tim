@@ -156,10 +156,10 @@ class RAGHandler:
                 f"ČLEN: {article_label}",
             ]
 
-            if score is not None:
-                block_lines.append(
-                    f"RELEVANCA: {score:.3f}"
-                )
+            # if score is not None:
+            #     block_lines.append(
+            #         f"RELEVANCA: {score:.3f}"
+            #     )
 
             if paragraph_number:
                 block_lines.append(
