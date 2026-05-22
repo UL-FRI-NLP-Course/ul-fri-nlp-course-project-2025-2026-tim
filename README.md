@@ -6,19 +6,7 @@ A domain-specific LLM chatbot for answering questions about Slovenian tax and in
 
 ## Enviroment Setup
 
-All scripts and source code are in the `chatbot` directory:
-
-```bash
-cd chatbot
-```
-
-Create the container, overlay file, and install dependencies (installation takes a long time):
-
-```bash
-bash create_environment.sh
-```
-
-Copy the example enviroment file into a new `.env`
+Copy the example enviroment file into a new `.env` (inside repository root):
 
 ```bash
 cp .env.example .env
@@ -45,6 +33,15 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 > If you do not have a HF Hub token, generate one. `(https://huggingface.co/docs/hub/en/security-tokens)`.
 
 > If you are not running any evaluations you can leave the other 3 variables blank.
+
+All scripts and source code are in the `chatbot` directory:
+
+```bash
+cd chatbot
+```
+
+> Our project uses a shared directory `group-tim_shared_containers` to store the container and overlay file, do not change anything regarding it. Since the file system is relatively slow, have some patience while waiting for the container to open and close.
+
 ---
 
 
@@ -54,7 +51,8 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 ```
    https://www.clarin.si/repository/xmlui/bitstream/handle/11356/2095/COLESLAW.zip
 ```
-2. Place `register-predpisov.jsonl` in `chatbot/data/`
+2. Place `register-predpisov.jsonl` in `chatbot/data/` (found in `COLESLAW 1.0/PISRS/register-predpisov.jsonl`)
+
 3. Run the chunking and embedding pipeline and select `normal` when prompted:
 ```bash
    bash run_chunking_and_embedding.sh
@@ -71,7 +69,7 @@ Run:
    bash download_processed_chunks.sh
 ```
 
-These chunks were embedded with the `BAAI/bge-m3` model, so make sure it matches in `configs/config.yaml`
+These chunks were embedded with the `BAAI/bge-m3` model, so make sure `embedding_model` matches in `configs/config.yaml`
 
 ---
 
@@ -82,7 +80,7 @@ These chunks were embedded with the `BAAI/bge-m3` model, so make sure it matches
 ```bash
 bash run_llm_server.sh
 ```
-Server connection details are written automatically to `configs/server_boot_config.yaml` on boot. The client should automatically load them on startup.
+Server connection details are written automatically to `configs/server_boot_config.yaml` on boot. The client should automatically load them on startup. The server can remain open as long as you need it, no need to close it if you restart the client.
 
 **Step 2** - Start the chatbot client:
 ```bash
@@ -91,9 +89,11 @@ bash run_chatbot_client.sh
 
 > The client job **must be interactive** - it provides the terminal interface for chatting with the model.
 
+> The wait times for `H100` GPUs are usually quite long, so if you want a weaker model to use the `V100S` GPU, set the `LLM_model` to `meta-llama/Llama-3.1-8B-Instruct` inside `configs/config.yaml` AND remove `--constraint=h100` inside `run_llm_server.sh`.
+
 ---
 
-## Evaluation
+## Evaluation (optional)
 
 If `OPENAI_API_KEY` is present in `.env`, `evaluation/scripts/evaluate_predictions.py` uses OpenAI directly by default. Set `OPENAI_JUDGE_MODEL` in `.env` to pick the hosted judge model; the default is `gpt-5-nano`.
 

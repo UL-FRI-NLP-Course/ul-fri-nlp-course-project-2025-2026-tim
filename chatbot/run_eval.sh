@@ -12,8 +12,8 @@ fi
 
 LLM_MODELS_DIR="${LLM_MODELS_DIR:-/d/hpc/projects/onj_fri/group-tim}"
 
-SIF_FILE="${SCRIPT_DIR}/containers/chatbot_container.sif"
-OVERLAY_FILE="${SCRIPT_DIR}/containers/chatbot_overlay.img"
+SIF_FILE="/d/hpc/projects/onj_fri/group-tim_shared_containers/chatbot_container.sif"
+OVERLAY_FILE="/d/hpc/projects/onj_fri/group-tim_shared_containers/chatbot_overlay.img"
 
 srun \
     --nodes=1 \
