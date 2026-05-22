@@ -35,6 +35,7 @@ SCORE_FIELDS = [
     "completeness_score",
     "faithfulness_score",
     "citation_score",
+    "citation_precision_score",
     "overall_score",
 ]
 
@@ -155,7 +156,14 @@ def load_prompt(prompt_path: Path) -> str:
     with open(prompt_path, "r", encoding="utf-8") as handle:
         if prompt_path.suffix.lower() in {".yaml", ".yml"}:
             prompt_yaml = yaml.safe_load(handle)
-            return prompt_yaml["text"].strip()
+            if isinstance(prompt_yaml, dict):
+                return str(prompt_yaml["text"]).strip()
+            if isinstance(prompt_yaml, str):
+                return prompt_yaml.strip()
+            raise ValueError(
+                f"Unsupported prompt format in '{prompt_path}'. "
+                "Expected either a YAML object with a 'text' field or raw text."
+            )
 
         return handle.read().strip()
 
@@ -252,6 +260,7 @@ def parse_judge_json(content: str) -> dict[str, Any]:
     parsed["completeness_score"] = int(parsed["completeness_score"])
     parsed["faithfulness_score"] = int(parsed["faithfulness_score"])
     parsed["citation_score"] = int(parsed["citation_score"])
+    parsed["citation_precision_score"] = int(parsed["citation_precision_score"])
     parsed["overall_score"] = float(parsed["overall_score"])
     parsed["passed"] = coerce_bool(parsed.get("passed", parsed["overall_score"] >= 7))
     parsed["rationale"] = str(parsed.get("rationale", "")).strip()
@@ -287,9 +296,7 @@ def judge_item(
             {"role": "system", "content": judge_prompt},
             {"role": "user", "content": build_judge_input(item)},
         ],
-        temperature=0,
         top_p=1,
-        max_tokens=512,
     )
 
     content = response.choices[0].message.content or ""

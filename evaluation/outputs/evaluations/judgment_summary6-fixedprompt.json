@@ -1,0 +1,13 @@
+{
+  "judge_model": "gpt-5-nano",
+  "total": 29,
+  "judged": 29,
+  "failed": 0,
+  "average_correctness_score": 2.0,
+  "average_completeness_score": 2.0344827586206895,
+  "average_faithfulness_score": 1.9655172413793103,
+  "average_citation_score": 0.8620689655172413,
+  "average_citation_precision_score": 1.4482758620689655,
+  "average_overall_score": 7.517241379310345,
+  "pass_rate": 0.5172413793103449
+}

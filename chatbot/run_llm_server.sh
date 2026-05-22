@@ -22,6 +22,7 @@ srun \
     --cpus-per-task=4 \
     --gres=gpu:1 \
     --partition=gpu \
+    --constraint=h100 \
     --time=01:30:00 \
     --pty \
     singularity exec --nv \
@@ -42,5 +43,7 @@ srun \
             export TRITON_CACHE_DIR=/models/triton_cache
             export VLLM_CACHE_ROOT=/models/vllm_cache
             
-            python /workspace/src/run_openai_llm_server.py
+            python /workspace/src/run_openai_llm_server.py \
+                --gpu-memory-utilization 0.85 \
+                --max-model-len 4096
         "
