@@ -18,9 +18,9 @@ Configure the enviroment file:
 # Copy this file to `.env` and fill in the values you need locally.
 # `LLM_MODELS_DIR` is the path where all models and chunk embeddings will be stored.
 # `HUGGINGFACE_HUB_TOKEN` is needed for downloading gated Hugging Face models.
-# `OPENAI_API_KEY` enables hosted OpenAI judging.
-# `OPENAI_JUDGE_MODEL` defaults to `gpt-5-nano`.
-# `OPENAI_BASE_URL` defaults to `https://api.openai.com/v1`.
+# `OPENAI_API_KEY` enables hosted OpenAI judging (OPTIONAL)
+# `OPENAI_JUDGE_MODEL` defaults to `gpt-5-nano` (OPTIONAL)
+# `OPENAI_BASE_URL` defaults to `https://api.openai.com/v1` (OPTIONAL)
 
 LLM_MODELS_DIR=/d/hpc/projects/onj_fri/{your directory}
 HUGGINGFACE_HUB_TOKEN=hf_...
@@ -82,6 +82,9 @@ bash run_llm_server.sh
 ```
 Server connection details are written automatically to `configs/server_boot_config.yaml` on boot. The client should automatically load them on startup. The server can remain open as long as you need it, no need to close it if you restart the client.
 
+> The wait times for `H100` GPUs are usually quite long, so if you want a weaker model to use the `V100S` GPU, set the `LLM_model` to `meta-llama/Llama-3.1-8B-Instruct` inside `configs/config.yaml` AND remove `--constraint=h100` inside `run_llm_server.sh`.
+
+
 **Step 2** - Start the chatbot client:
 ```bash
 bash run_chatbot_client.sh
@@ -89,7 +92,6 @@ bash run_chatbot_client.sh
 
 > The client job **must be interactive** - it provides the terminal interface for chatting with the model.
 
-> The wait times for `H100` GPUs are usually quite long, so if you want a weaker model to use the `V100S` GPU, set the `LLM_model` to `meta-llama/Llama-3.1-8B-Instruct` inside `configs/config.yaml` AND remove `--constraint=h100` inside `run_llm_server.sh`.
 
 ---
 
