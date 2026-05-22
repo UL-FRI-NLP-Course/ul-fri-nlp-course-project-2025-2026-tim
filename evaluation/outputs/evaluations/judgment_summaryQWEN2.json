@@ -1,0 +1,10 @@
+{
+  "judge_model": "gpt-5",
+  "total": 29,
+  "judged": 29,
+  "failed": 0,
+  "legal_correct_rate": 0.7241379310344828,
+  "citation_correct_rate": 0.13793103448275862,
+  "hallucination_rate": 0.2413793103448276,
+  "passed_rate": 0.6896551724137931
+}
