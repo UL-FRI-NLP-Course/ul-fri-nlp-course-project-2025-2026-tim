@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FRI Data Science_report LaTeX Template
 % Version 1.0 (28/1/2020)
-% 
+%
 % Jure Demšar (jure.demsar@fri.uni-lj.si)
 %
 % Based on MicromouseSymp article template by:
-% Mathias Legrand (legrand.mathias@gmail.com) 
+% Mathias Legrand (legrand.mathias@gmail.com)
 % With extensive modifications by:
 % Antonio Valente (antonio.luis.valente@gmail.com)
 %
@@ -14,36 +14,35 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 %----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%  PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 \documentclass[fleqn,moreauthors,10pt]{ds_report}
 \usepackage[english]{babel}
 \usepackage{titlesec}
+\usepackage{comment}
+\usepackage{float}
 \titlespacing*{\subsection}{0pt}{2.5ex plus 3pt minus 2pt}{0.25em}
+\usepackage{svg}
 
 \graphicspath{{fig/}}
 
-
-
-
 %----------------------------------------------------------------------------------------
-%	ARTICLE INFORMATION
+%  ARTICLE INFORMATION
 %----------------------------------------------------------------------------------------
 
 % Header
 \JournalInfo{FRI Natural language processing course 2026}
 
 % Interim or final report
-\Archive{Project report} 
-%\Archive{Final report} 
+\Archive{Project report}
+%\Archive{Final report}
 
 % Article title
 \PaperTitle{A RAG-Based Chatbot for Slovenian Tax and Investment Law}
 
 % Authors (student competitors) and their info
-\Authors{Maj Bregar, Jan Tršan, and Edita Džubur}
+\Authors{Maj Bregar, Edita Džubur and Jan Tršan }
 
 % Advisors
 \affiliation{\textit{Advisors: Slavko Žitnik}}
@@ -52,13 +51,12 @@
 \Keywords{LLM, retrieval-augmented generation, chatbot, prompt engineering}
 \newcommand{\keywordname}{Keywords}
 
-
 %----------------------------------------------------------------------------------------
-%	ABSTRACT
+%  ABSTRACT
 %----------------------------------------------------------------------------------------
 
 \Abstract{
-This project develops a domain-specific chatbot for Slovenian investment and tax law. Since general-purpose LLMs lack reliable domain knowledge, the proposed approach uses retrieval-augmented generation (RAG) to produce accurate, up-to-date, and verifiable responses based on external legal documents. Prompt engineering is applied to enforce structure and introduce guardrails. The system is built on a curated dataset combining legal corpora and official Slovenian sources.
+  This project develops a domain-specific chatbot for Slovenian investment and tax law. Since general-purpose LLMs lack reliable domain knowledge, the proposed approach uses retrieval-augmented generation (RAG) to produce accurate, up-to-date, and verifiable responses based on external legal documents. Prompt engineering is applied to enforce structure and introduce guardrails. The system is built on a curated dataset combining legal corpora and official Slovenian sources.
 }
 
 %----------------------------------------------------------------------------------------
@@ -66,117 +64,275 @@ This project develops a domain-specific chatbot for Slovenian investment and tax
 \begin{document}
 
 % Makes all text pages the same height
-\flushbottom 
+\flushbottom
 
 % Print the title and abstract box
-\maketitle 
+\maketitle
 
 % Removes page numbering from the first page
-\thispagestyle{empty} 
+\thispagestyle{empty}
 
 %----------------------------------------------------------------------------------------
-%	ARTICLE CONTENTS
+%  ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
 \section*{Introduction}
-Large language models (LLMs) often lack sufficiently deep domain-specific knowledge to provide reliable advice in specialized fields. This is especially problematic in legal and financial domains, where answers may depend on specific provisions, exceptions, and recent changes. In such settings, responses should not only be plausible, but also grounded in sources that the user can inspect.
 
-This project develops a chatbot for Slovenian investment and tax law. Instead of relying only on the model's internal knowledge, the system uses retrieval-augmented generation (RAG) to ground answers in external legal documents. The goal is to provide responses that are understandable, relevant to the user's question, and linked to sources that can be verified.
+Large language models (LLMs) often struggle in specialized domains where answers require precise, up-to-date, and verifiable information. This is particularly challenging in legal and financial settings, where responses may depend on specific regulations, exceptions, and recent legislative changes. In such applications, generated answers should not only be plausible, but also grounded in inspectable sources.
 
+Retrieval-Augmented Generation (RAG), introduced by Lewis et al.~\cite{rag}, combines language generation with external document retrieval and has become increasingly attractive for knowledge-intensive applications. Recent work has explored retrieval-based systems for legal question answering and consultation. LegalBench-RAG~\cite{legalbenchrag} highlighted the importance of accurate retrieval in legal systems and showed that retrieval quality strongly affects downstream answer generation. LexRAG~\cite{lexrag} further studied multi-turn legal consultation and identified retrieval as a major challenge in conversational legal assistants. Domain-specific legal assistants have also been proposed for other jurisdictions, such as the Indian system Grahak-Nyay~\cite{grahaknyay}, a consumer-law chatbot based on large language models.
 
-%------------------------------------------------
-\section*{Literature Overview}
-
-Several approaches can be used to adapt LLMs to specialized tasks. They differ mainly in whether knowledge is provided through the prompt, learned into the model parameters, or retrieved from external sources at inference time.
-
-A straightforward and widely adopted approach is prompt engineering~\cite{fewshot}, where model behavior is guided through carefully designed instructions, constraints, or examples. Rather than modifying the model itself, knowledge is implicitly introduced at inference time through the prompt. This makes the approach highly flexible and inexpensive, and particularly useful for rapid prototyping, enforcing output structure, or guiding reasoning processes in chatbot systems. However, its reliance on the context window limits how much domain knowledge can be injected, and performance can vary significantly depending on prompt formulation. As a result, prompt engineering alone is often insufficient in domains where correctness and reliability are critical.
-
-In contrast, fine-tuning~\cite{lora} embeds domain knowledge directly into the model’s parameters by training on domain-specific data. This allows the model to internalize terminology, patterns, and expected behaviors, leading to more consistent and specialized outputs. Such properties are beneficial for tasks like document classification or maintaining a specific response style in a chatbot. At the same time, this approach comes with notable drawbacks: it is resource-intensive, depends on the availability of high-quality labeled data, and produces a static representation of knowledge that cannot easily adapt to updates, such as changes in regulations or financial markets. Furthermore, the lack of explicit source attribution limits its applicability in settings where transparency is required.
-
-RAG~\cite{rag} addresses many of these limitations by combining pretrained model knowledge with external information sources. Instead of relying solely on internal parameters, the model retrieves relevant documents at inference time and conditions its responses on them. This enables access to up-to-date and domain-specific information, reduces hallucinations when retrieval is effective, and supports the inclusion of explicit references. Consequently, RAG is particularly well-suited for legal and financial chatbot systems, where answers must be both accurate and verifiable. The trade-off lies in increased system complexity, as it requires a dedicated retrieval pipeline, and in sensitivity to retrieval quality, which directly impacts response reliability and latency.
-
-In practice, these methods are rarely used in isolation. Prompt engineering is often employed to structure and constrain outputs, fine-tuning to ensure consistent behavior, and RAG to provide grounded, up-to-date knowledge, resulting in hybrid systems that balance flexibility, accuracy, and transparency.
+Motivated by these findings, we develop a RAG-based chatbot for Slovenian investment and tax law. The system retrieves relevant legal documents and generates grounded responses based on Slovenian legal sources.
 
 
 
-\section*{Proposed Dataset and Data Sources}
-
-The dataset combines Slovenian legal texts with explanatory government sources and linguistic corpora. The main focus is on tax- and investment-related legislation, especially acts such as \textit{ZDoh-2} and \textit{ZDavP-2}.
-
-\subsection*{Core Legal Corpus}
-
-The primary dataset is based on the Slovenian legal corpus provided within the LLM4DH project~\cite{llm4dh}. It contains Slovenian legislation in a structured form and provides the core legal material used for retrieval and grounding.
-
-\subsection*{Supplementary Legal Data Sources}
-
-To improve coverage beyond the core corpus, we also use official Slovenian legal and administrative sources. \textbf{PISRS (Pravno-informacijski sistem RS)}\footnote{\url{https://pisrs.si}} provides structured access to Slovenian legislation, including tax-related acts, while \textbf{Uradni list RS}\footnote{\url{https://www.uradni-list.si}} contains official publications of laws and amendments.
-
-For more practical user-facing material, we also include \textbf{FURS (Financial Administration of RS)}\footnote{\url{https://www.fu.gov.si}}, which provides tax guidelines, explanations, and frequently asked questions, and \textbf{e-Uprava}\footnote{\url{https://e-uprava.gov.si}}, which offers simplified explanations of administrative procedures and legal obligations.
-
-\subsection*{CLARIN.SI Legal and Linguistic Corpora}
-
-We also use resources from the CLARIN.SI infrastructure to support linguistic processing and possible future model evaluation. The \textbf{Slovenian Legal Corpus (CLARIN.SI)}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/2095}} contains Slovenian legal texts with linguistic annotations and metadata. The \textbf{siParl Parliamentary Corpus}\footnote{\url{https://www.clarin.si/repository/xmlui/handle/11356/1300}} contains Slovenian parliamentary debates from 1990 to 2018 and provides broader context for legislative discussions~\cite{siparl}.
-
-These resources are useful for terminology analysis, linguistic preprocessing, and potential later experiments beyond the initial RAG pipeline.
-
-\subsection*{Dataset Construction Strategy}
-
-The dataset is constructed by combining authoritative Slovenian legal texts with supporting explanatory sources. The documents are cleaned and converted into a consistent textual format before being passed to the chunking pipeline described below. 
-
-The focus is on tax- and investment-related legislation, while sources such as FURS and e-Uprava provide more practical explanations of legal procedures. This gives the system access to both formal legal provisions and user-oriented interpretations.
+%----------------------------------------------------------------------------------------
+%  METODE
+%----------------------------------------------------------------------------------------
 
 
-\section*{Methodology}
+\newpage
+\section*{Methods}
 
-This section describes the implemented baseline pipeline, from legal document preprocessing to retrieval, reranking, and answer generation.
+\subsection*{Dataset}
+
+The retrieval corpus is based on the Slovenian legal dataset released within the LLM4DH project~\cite{llm4dh}. We use the COLESLAW corpus and specifically the collection \emph{register-predpisov}, which contains structured Slovenian legal acts and regulatory documents.
+
+The corpus was filtered to retain tax- and investment-related legislation, including laws such as \textit{ZDoh-2} and \textit{ZDavP-2}. Documents were converted into a unified textual representation before preprocessing and chunk generation.
+
+
 
 \subsection*{System Architecture}
 
-The implemented baseline follows a modular RAG architecture with separate offline indexing and online answering stages. The offline stage builds the retrieval store from legal documents, while the online stage retrieves and reranks relevant chunks before generating a grounded answer with a locally served instruction-tuned language model.
+The chatbot follows a modular Retrieval-Augmented Generation (RAG) architecture consisting of offline indexing and online inference stages. During indexing, legal documents are processed and embedded into a vector store. During inference, relevant chunks are retrieved, reranked, and passed to a language model for grounded response generation.
 
-The system is split into two main runtime components. The first runs the vLLM server and exposes an OpenAI-compatible endpoint for answer generation. The second acts as the chatbot client, loading the retrieval components, assembling prompts, managing chat history, and providing the interactive terminal interface. This separation is useful in the HPC environment because the LLM server can run as a GPU job, while retrieval, reranking, prompt construction, and chat-history handling remain on the client side.
+Figure~\ref{fig:pipeline} illustrates the overall pipeline.
+
+%-------------------------
+% PLACEHOLDER FIGURE
+%-------------------------
+
+\begin{figure}[h]
+  \centering
+  \fbox{
+    \parbox{0.85\linewidth}{
+      \centering
+
+      Legal documents
+
+      $\downarrow$
+
+      Chunking + metadata extraction
+
+      $\downarrow$
+
+      Embedding (BGE-M3)
+
+      $\downarrow$
+
+      Cosine Similarity Retrieval (top 50 chunks)
+
+      $\downarrow$
+
+      Reranking and final chunk output (BGE-reranker-v2-M3, top 5 chunks)
+
+      $\downarrow$
+
+      Prompt construction
+
+      $\downarrow$
+
+      Qwen2.5-14B-Instruct LLM response generation
+  }}
+  \caption{Overview of the RAG pipeline.}
+  \label{fig:pipeline}
+\end{figure}
+
+\subsection*{Retrieval and Generation Pipeline}
+
+Legal documents were segmented according to their internal structure into article- and paragraph-level chunks. Metadata including law title, article number, and legal categories was attached to each chunk to preserve source context.
+
+Embeddings were generated using the \emph{BAAI/bge-m3}~\cite{bgem3} multilingual embedding model. During inference, retrieved candidates were ranked by cosine similarity before being reranked by the \emph{BAAI/bge-reranker-v2-m3}~\cite{reranker} and passed to the generation stage. Multiple reranking strategies were explored and are discussed in Results.
+
+%-----------------------------------
+
+The final prompt included the top retrieved chunks together with metadata and conversation history. Prompt engineering was used to improve grounding behavior. Instead of relying exclusively on the highest-ranked retrieved chunk, the prompt instructed the model to consider all retrieved evidence jointly and resolve conflicting information before generating a response. We additionally experimented with different prompt formulations and chunk-selection strategies.
+
+Responses were generated using \emph{Llama-3.1-8B-Instruct}~\cite{llmllama} and \emph{Qwen2.5-14B-Instruct}~\cite{qwen}, served through vLLM.
 
 
-\subsection*{Chunking Strategy}
+\subsection*{Retriever Evaluation Setup}
 
-The retrieval component of the chatbot is built by converting legal documents into structured text chunks and embedding them into a vector index. The input consists of COLESLAW-style JSONL records, where each record contains metadata such as the law title, identifier, and full legal text.
+To select the final reranking model, we conducted an LLM-supervised retrieval quality evaluation using the NDCG@k metric. We constructed a set of handwritten queries representing questions about Slovene tax and investment legislation. For each query, we first retrieved 100 chunks using cosine similarity ranking on embeddings generated by the \textbf{BGE-M3} embedding model. The retrieved chunks were then evaluated using \textit{gpt-4.1-mini}, which was prompted to assess how relevant each chunk was for answering the query, as well as how effectively the chunk could support answer generation. The resulting LLM-generated relevance scores were treated as the ground-truth ranking for computing the NDCG metric on the final retrieved chunks.
 
-The chunking process first filters the input records according to one of three strategies. In the default strategy, records are selected using a combination of explicitly whitelisted laws and keyword-based relevance filtering for tax and investment terminology. In the whitelist strategy, only a predefined set of core laws is retained, including \textit{ZDoh-2}, \textit{ZDavP-2}, \textit{ZDDPO-2}, \textit{ZDDV-1}, \textit{ZTFI-1}, \textit{ZISDU-3}, \textit{ZBan-3}, and \textit{ZGD-1}. In the all-laws strategy, filtering is disabled and all input records are processed; records that cannot be parsed into articles may optionally be preserved as fallback document-level chunks.
+We first evaluated the baseline retrieval performance of the \textbf{BGE-M3} embedding model without reranking. We then evaluated retrieval performance after applying reranking with three reranking models of different sizes, shown in Table~\ref{tab:reranker_models}.
 
-Each selected legal document is then segmented according to its internal legal structure. The parser detects article markers such as \textit{1. člen}, extracts article headings when present, assigns chapter or section metadata, and splits article bodies into paragraph-level units such as \textit{(1)}, \textit{(2)}, and similar legal subdivisions. For long provisions, the parser applies additional splitting based on legal list boundaries, including numbered and lettered items. This avoids arbitrary cuts in the middle of words or legal clauses and helps preserve the semantic integrity of each chunk.
+\begin{table}[h]
+\centering
+\caption{Reranking model names}
+\label{tab:reranker_models}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{|l|}
+\hline
+\textbf{Reranker Model} \\
+\hline
+\textbf{cross-encoder/ms-marco-MiniLM-L6-v2} \\
+\hline
+\textbf{cross-encoder/mmarco-mMiniLMv2-L12-H384-v1} \\
+\hline
+\textbf{BAAI/bge-reranker-v2-m3} \\
+\hline
+\end{tabular}
+\end{table}
 
-Each generated chunk contains both the raw chunk text and structured metadata. The metadata includes the law title, law code, article number, article heading, paragraph or item number, chapter, document identifiers, and domain tags such as \texttt{tax}, \texttt{income\_tax}, \texttt{capital\_gains}, \texttt{investment}, or \texttt{vat}. A formatted version of the chunk is also created, combining the legal text with its metadata. This formatted representation is used for embedding so that retrieval can benefit from both the content of the provision and its legal context.
+Each model configuration was evaluated using the mean NDCG@k value across 30 unique query results.
 
-This strategy is designed to balance retrieval precision with legal interpretability. Article and paragraph-level chunks are small enough to support focused retrieval, while the attached metadata preserves the legal source context needed for citation and verification.
 
-\subsection*{Chunk Embedding}
 
-Chunk embeddings are generated using the multilingual sentence-transformer model \texttt{BAAI/bge-m3}~\cite{bgem3}, which provides strong multilingual performance and works well for morphologically rich languages such as Slovenian.
 
-The resulting vectors are normalized by default and stored as a NumPy matrix. A FAISS index is then optionally constructed using inner product search over the normalized embeddings, which corresponds to cosine similarity. The final output directory contains the chunk file, embedding matrix, FAISS index.
 
-\subsection*{RAG Pipeline}
+\subsection*{LLM Answer Evaluation Setup}
 
-Upon receiving a user query, the text is embedded using \texttt{BAAI/bge-m3}, and the top 50 most similar chunks are retrieved from the RAG chunk store. These candidates are then reranked using \texttt{BAAI/bge-reranker-v2-m3}~\cite{reranker}, with the top 10 most relevant chunks retained. The selected chunks, together with their metadata (e.g., law name, article, paragraph), are used to construct a structured RAG prompt that clearly delineates the legal context and provides explicit instructions for grounded answering.
+To evaluate answer quality, we created a gold dataset of 29 Slovenian tax-related questions. The dataset includes realistic user scenarios, definition questions, edge cases, and a small number of unanswerable questions. It is designed to test both retrieval quality and whether the model can refrain from answering when there is insufficient legal evidence. The question--answer pairs were first generated using LLMs and then manually verified against Slovenian legal sources.
 
-The RAG prompt, along with the user query, system-level formatting instructions, and conversation history, is sent to a vLLM server running \texttt{Llama-3.1-8B-Instruct}~\cite{llmllama} via the \texttt{OpenAI} API message interface. The prompt enforces strict reliance on the provided legal context, requiring the model to cite relevant laws and articles, avoid hallucinations, and explicitly indicate when the answer cannot be determined from the retrieved sources.
+The overall evaluation process is summarized in Figure~\ref{fig:evaluation_pipeline}.
 
-\subsection*{Evaluation Dataset and Preliminary Analysis}
+\begin{figure}[h]
+  \centering
+  \fbox{
+    \parbox{0.85\linewidth}{
+      \centering
 
-We prepared a gold evaluation dataset for Slovenian tax-related question answering. The dataset contains practical user questions based on several Slovenian tax laws, including scenario-based questions, edge cases, definition questions, and a small number of unanswerable questions. The purpose of including different question types is to test not only whether the system can retrieve relevant legal provisions, but also whether it avoids generating unsupported answers when the available context is insufficient.
+      Gold dataset (29 Slovenian tax questions)
 
-The evaluation examples were created with the help of several LLMs. We used them to generate possible tax-related questions, suggest answers, and check the answers against the relevant legal sources. This gave us a wider set of examples than we would likely get from writing all questions manually. After that, we manually reviewed the dataset and corrected the answers where needed. In particular, we checked whether each answer was supported by the cited legal text and whether the question represented a realistic use case for a Slovenian tax assistant.
+      $\downarrow$
 
-We also ran the current chatbot pipeline on the gold questions and manually compared the generated answers with the reference answers. This preliminary analysis was qualitative rather than metric-based, but it helped reveal several recurring issues. In some cases, the system retrieved or relied on a less relevant legal act, including older sources. Some answers were partially correct but missed important exceptions or conditions, while others were overly cautious and stated that the answer could not be determined even when the gold answer was clear. We also observed a few cases where the model added unsupported details or misinterpreted legal negation.
+      LLM-generated Q\&A pairs
 
-\subsection*{Future Work}
+      $\downarrow$
 
-In future work, we plan to make the evaluation more systematic. For each question, we will store the retrieved chunks, the generated answer, and the sources used by the model, then score the result against the gold answer and expected legal sources. The evaluation should measure answer correctness, completeness, source relevance, and faithfulness to the provided legal context.
+      Manual verification against legal sources
 
-We also plan to combine manual review with LLM-based evaluation. A stronger LLM can help flag incomplete, unsupported, or contradictory answers, while manual inspection remains important for borderline legal cases. The results will then be used to tune retrieval and reranking parameters, filter outdated or less relevant sources, and improve the final prompting layer.
- 
+      $\downarrow$
+
+      Evaluation inputs:
+      (gold answer + model answer + retrieved context)
+
+      $\downarrow$
+
+      LLM judge (GPT-5-nano)
+
+      $\downarrow$
+
+      JSON output:
+      \textbf{legal\_correct}, \textbf{citation\_correct}, \textbf{hallucination}, \textbf{passed}, \textbf{rationale}
+
+      $\downarrow$
+
+      Manual review (if needed)
+    }
+  }
+  \caption{Overview of the LLM-based evaluation pipeline.}
+  \label{fig:evaluation_pipeline}
+\end{figure}
+
+We evaluated system outputs using an automatic LLM-based judge (\emph{GPT-5-nano}). For each question, the judge receives the gold answer, generated answer, and retrieved legal context. It produces a structured JSON output with five fields: \textbf{legal\_correct}, \textbf{citation\_correct}, \textbf{hallucination}, \textbf{passed}, and \textbf{rationale}, which together provide both a binary decision and an explanation of the judgment.
+
+Initial results showed that the automated judge was sometimes overly strict, penalizing answers that were practically correct but included additional citations or standard legal disclaimers. To address this limitation, we added a manual review step. Manual evaluation focuses on whether a user relying only on the answer would reach the correct legal conclusion.
+
+
+%----------------------------------------------------------------------------------------
+%  REZULTATI
+%----------------------------------------------------------------------------------------
+
+\newpage
+\section*{Results}
+
+\subsection*{Retriever Evaluation Results}
+
+The retrieval evaluation results are shown in Figure~\ref{fig:reranking_means}. The results demonstrate that reranking has a substantial impact on retrieval quality. The largest and most recent reranking model, \textit{BAAI/bge-reranker-v2-m3}, consistently achieved the highest NDCG@k scores across all evaluated values of $k$, significantly outperforming both the baseline embedding-only retrieval and the alternative reranking models.
+
+In contrast, the smaller \textit{cross-encoder/ms-marco-MiniLM-L6-v2} model reduced retrieval performance compared to the baseline. This suggests that low-capacity reranking models can negatively affect retrieval quality when paired with semantically strong embedding models such as \textit{BGE-M3}, as incorrect reranking disrupts the high quality original ordering.
+
+The NDCG@k trends also provide insight into the optimal number of retrieved chunks for the final pipeline. The highest scores are achieved for small values of $k$, particularly between $k=2$ and $k=5$, indicating that the most semantically relevant chunks are typically ranked within the top retrieved results. Beyond this range, the scores gradually increase again due to the inclusion of weakly relevant chunks, which artificially inflate the ranking metric without meaningfully improving retrieval quality.
+
+Although NDCG@k is a relative ranking metric, the observed scores remain substantially below the theoretical maximum value of 1.0. This indicates that the retrieval system does not consistently return perfectly relevant chunks at the top ranks. This observation is further supported by the retrieval variance shown in Figure~\ref{fig:reranking_variance}, where large score variations at low values of $k$ reveal inconsistent retrieval quality across evaluation queries.
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=\linewidth]{fig/model_reranker_llm_scored_mean}
+  \caption{
+    Retrieval performance of embedding and reranking model combinations measured using average NDCG@k over 30 evaluation queries.
+  }
+  \label{fig:reranking_means}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includesvg[width=\linewidth]{fig/model_reranker_llm_scored_std}
+  \caption{
+    Standard deviation of NDCG@k scores across evaluation queries for different embedding and reranking model combinations.
+  }
+  \label{fig:reranking_variance}
+\end{figure}
+
+Based on both the mean and variance of the NDCG@k scores, the \textit{BAAI/bge-reranker-v2-m3} model was selected for the final pipeline. To reduce retrieval latency, we set the cosine similarity retrieved number of chunks to $50$ in the final pipeline, under the assumption that most high quality embeddings are captured within that window. We additionally selected $k=5$ as the final number of retrieved chunks, allowing the downstream LLM to identify and utilize the most relevant information during answer generation. 
+
+
+
+
+\subsection*{Question Answering Evaluation Results}
+
+We evaluated Llama-3.1 and Qwen-2.5 across 29 test questions, comparing strict automated decisions with our practical manual review. The final metrics are summarized in Table~\ref{tab:qa_comparison}.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcccc}
+\hline
+ & \multicolumn{2}{c}{\textbf{Llama-3.1 (8B)}} & \multicolumn{2}{c}{\textbf{Qwen-2.5}} \\
+\textbf{Metric} & Auto & Manual & Auto & Manual \\
+\hline
+Passed (True)   & 12    & 17    & 20   & 22     \\
+Failed (False)  & 17   & 12      & 9   & 7      \\
+\textbf{Pass Rate} & \textbf{41\%} & \textbf{58\%} & \textbf{69\%} & \textbf{76\%} \\
+\hline
+\end{tabular}
+\caption{Comparison of true pass results for Llama and Qwen models.}
+\label{tab:qa_comparison}
+\end{table}
+
+The automated judge frequently penalized both models for harmless additions such as extra legal references or standard legal disclaimers. Manual review showed substantially stronger practical performance. Qwen-2.5 achieved the highest overall performance, correctly answering 22 of 29 questions, while Llama-3.1 correctly answered 17. The gap between automated and manual scores suggests that strict citation-based evaluation may underestimate practical answer quality.
+
+Manual inspection also uncovered errors that were not captured by the automated judge. In one example, the model was asked whether excise duty (slo. \emph{trošarina}) must be paid for 8 liters of spirits (slo. \emph{žgane pijače}) brought from Italy for personal use. The model correctly identifies the 10-liter threshold for excise duty on spirits but incorrectly applies this rule, concluding that duty is required even though the quantity is below the legal limit. This shows that errors can occur even when the relevant legal rule is correctly retrieved, due to incorrect application of the rule to the specific scenario.
+%----------------------------------------------------------------------------------------
+%  DISCUSI
+%----------------------------------------------------------------------------------------
+
+\section*{Discussion}
+
+The results indicate that retrieval quality and language model choice both significantly affect performance in legal question answering systems. Our analysis shows that the quality of the final answer is only as good at the weakest link in the entire pipeline, therefore a selected strong baseline embedding model must be paired with a strong reranking model and a powerful large language model.
+
+While reranking improved the relevance of retrieved context, this improvement did not always translate into better final answers. In several cases, the model still failed to correctly use relevant legal passages, suggesting that improving retrieval alone is not sufficient. The downstream model must be able to reliably interpret and select the relevant information from multiple sources.
+
+We also observed clear differences between models. Qwen-2.5 generally produced more accurate and consistent answers than Llama-3.1 in practical evaluations. However, even the stronger model was not robust in all cases, particularly for edge cases or questions requiring careful interpretation of legal conditions. This shows that model choice reduces but does not eliminate reasoning and grounding errors.
+
+Prompt design had a strong influence on system behaviour, but introduced trade-offs. Early prompts caused excessive reliance on the top-ranked retrieved chunk, leading to incomplete answers. After modifying the prompt to encourage the use of multiple sources, the system became more comprehensive but also less precise. In some cases, it combined unrelated information from different documents, which resulted in overly broad or partially incorrect legal conclusions.
+
+A major limitation of the system is the instability of smaller language models when operating with retrieved context. They occasionally misinterpreted simple user queries, introduced irrelevant explanations, or produced logically inconsistent reasoning despite having access to correct legal sources. This suggests that retrieval-augmented generation alone is not sufficient for reliable legal reasoning without stronger instruction-following or reasoning capabilities.
+
+Another limitation concerns evaluation. The automated LLM-based judge (\emph{GPT-5}) was not fully aligned with human judgment. It tended to penalise answers that included additional legal disclaimers or extra citations, even when the practical answer was correct. This required manual verification, which indicates that automated evaluation is not fully reliable for this type of task.
+
+
+Future evaluation improvements could include a more careful separation between retrieval quality and answer evaluation. Specifically, evaluation criteria should be defined more strictly to distinguish whether the system arrives at the right legal conclusion or whether it's citation is correct. 
+
+Future pipeline improvements could include expanding the dataset with more complex legal scenarios, integrating expert legal review for evaluation, and testing stronger reasoning-oriented models. Another promising direction would be improving retrieval beyond semantic similarity, for example by incorporating structured legal metadata or rule-based filtering to reduce irrelevant context.
+
+
 \bibliographystyle{unsrt}
 \bibliography{report}
-
 
 \end{document}

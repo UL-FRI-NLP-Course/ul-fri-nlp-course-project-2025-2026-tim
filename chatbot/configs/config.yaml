@@ -9,7 +9,7 @@ reranking_model: BAAI/bge-reranker-v2-m3
 LLM_model: Qwen/Qwen2.5-14B-Instruct
 
 top_k_chunks: 50
-reorder_top_n_chunks: 3
+reorder_top_n_chunks: 5
 
 llm_temperature: 0.3
 llm_top_p: 0.85
