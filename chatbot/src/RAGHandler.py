@@ -193,7 +193,7 @@ class RAGHandler:
             "",
             context_str
         ])
-
+        print(rag_prompt)
         return rag_prompt
 
 

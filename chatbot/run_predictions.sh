@@ -35,6 +35,6 @@ srun \
             python /workspace/evaluation/scripts/generate_predictions.py \
                 --gold /workspace/evaluation/data/gold_eval.jsonl \
                 --prompt /workspace/evaluation/prompts/chatbot_system_prompt.yaml \
-                --output /workspace/evaluation/outputs/predictions/predictions4.jsonl \
+                --output /workspace/evaluation/outputs/predictions/predictions6.jsonl \
                 --chatbot-config /workspace/chatbot/configs/config.yaml \
         "

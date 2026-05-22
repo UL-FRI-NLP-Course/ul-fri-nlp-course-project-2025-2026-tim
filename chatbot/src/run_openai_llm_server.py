@@ -79,7 +79,8 @@ def start_vllm_server(model_path, host, port):
     cmd = [
         sys.executable, "-m", "vllm.entrypoints.openai.api_server",
         "--model", str(model_path),
-        "--max-model-len", "16384",
+        "--max-model-len", "4096",
+        "--gpu-memory-utilization", "0.85",
         "--host", host,
         "--port", str(port),
         "--tensor-parallel-size", "1",
