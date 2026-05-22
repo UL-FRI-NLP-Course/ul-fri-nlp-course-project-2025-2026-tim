@@ -1,0 +1,10 @@
+{
+  "judge_model": "gpt-5-nano",
+  "total": 29,
+  "judged": 29,
+  "failed": 0,
+  "legal_correct_rate": 0.5862068965517241,
+  "citation_correct_rate": 0.8275862068965517,
+  "hallucination_rate": 0.1724137931034483,
+  "passed_rate": 0.5172413793103449
+}

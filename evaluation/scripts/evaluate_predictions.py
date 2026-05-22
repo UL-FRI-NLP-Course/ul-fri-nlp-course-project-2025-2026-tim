@@ -28,15 +28,13 @@ DEFAULT_SUMMARY_PATH = (
 DEFAULT_PROMPT_PATH = REPO_ROOT / "evaluation" / "prompts" / "judge_prompt.yaml"
 DEFAULT_SERVER_BOOT_CONFIG = REPO_ROOT / "chatbot" / "configs" / "server_boot_config.yaml"
 DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
-DEFAULT_OPENAI_JUDGE_MODEL = "gpt-5-nano"
+DEFAULT_OPENAI_JUDGE_MODEL = "gpt-5"
 
-SCORE_FIELDS = [
-    "correctness_score",
-    "completeness_score",
-    "faithfulness_score",
-    "citation_score",
-    "citation_precision_score",
-    "overall_score",
+BOOLEAN_JUDGMENT_FIELDS = [
+    "legal_correct",
+    "citation_correct",
+    "hallucination",
+    "passed",
 ]
 
 
@@ -252,17 +250,14 @@ def parse_judge_json(content: str) -> dict[str, Any]:
             raise
         parsed = json.loads(content[start : end + 1])
 
-    for field in SCORE_FIELDS:
+    for field in BOOLEAN_JUDGMENT_FIELDS:
         if field not in parsed:
             raise ValueError(f"Judge response is missing '{field}'")
 
-    parsed["correctness_score"] = int(parsed["correctness_score"])
-    parsed["completeness_score"] = int(parsed["completeness_score"])
-    parsed["faithfulness_score"] = int(parsed["faithfulness_score"])
-    parsed["citation_score"] = int(parsed["citation_score"])
-    parsed["citation_precision_score"] = int(parsed["citation_precision_score"])
-    parsed["overall_score"] = float(parsed["overall_score"])
-    parsed["passed"] = coerce_bool(parsed.get("passed", parsed["overall_score"] >= 7))
+    parsed["legal_correct"] = coerce_bool(parsed["legal_correct"])
+    parsed["citation_correct"] = coerce_bool(parsed["citation_correct"])
+    parsed["hallucination"] = coerce_bool(parsed["hallucination"])
+    parsed["passed"] = coerce_bool(parsed["passed"])
     parsed["rationale"] = str(parsed.get("rationale", "")).strip()
     return parsed
 
@@ -317,14 +312,10 @@ def summarize(judgments: list[dict[str, Any]], judge_model: str) -> dict[str, An
     if not successful:
         return summary
 
-    for field in SCORE_FIELDS:
-        summary[f"average_{field}"] = mean(
-            float(item["judgment"][field]) for item in successful
+    for field in BOOLEAN_JUDGMENT_FIELDS:
+        summary[f"{field}_rate"] = mean(
+            1.0 if item["judgment"].get(field) else 0.0 for item in successful
         )
-
-    summary["pass_rate"] = mean(
-        1.0 if item["judgment"].get("passed") else 0.0 for item in successful
-    )
     return summary
 
 
